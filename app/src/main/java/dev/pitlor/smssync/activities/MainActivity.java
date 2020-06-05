@@ -1,4 +1,4 @@
-package dev.pitlor.smssync;
+package dev.pitlor.smssync.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +14,8 @@ import android.widget.TextView;
 import java.util.List;
 
 import dev.pitlor.smssync.databinding.ActivityMainBinding;
+import dev.pitlor.smssync.util.PermissionUtilities;
+import dev.pitlor.smssync.util.TelephonyUtilities;
 
 public class MainActivity extends AppCompatActivity {
     public static final int READ_SMS_CODE = 0;

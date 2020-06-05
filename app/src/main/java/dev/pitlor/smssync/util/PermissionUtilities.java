@@ -1,4 +1,4 @@
-package dev.pitlor.smssync;
+package dev.pitlor.smssync.util;
 
 import android.app.Activity;
 import android.content.pm.PackageManager;
