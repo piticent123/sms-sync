@@ -6,16 +6,23 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.content.ContentResolver;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Telephony;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import dev.pitlor.sms.Message;
+import dev.pitlor.sms.Messages;
+import dev.pitlor.sms.models.Sms;
 import dev.pitlor.smssync.databinding.ActivityMainBinding;
 import dev.pitlor.smssync.util.PermissionUtilities;
-import dev.pitlor.smssync.util.TelephonyUtilities;
 
 public class MainActivity extends AppCompatActivity {
     public static final int READ_SMS_CODE = 0;
@@ -43,14 +50,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void listTexts() {
-        view.smsList.setAdapter(new MyAdapter(TelephonyUtilities.getAllSmsFromProvider(this, 10)));
+
+
+//        view.smsList.setAdapter(new MyAdapter());
     }
 
     private static class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
-        private List<String> mDataset;
+        private List<Message> mDataset;
 
         // Provide a suitable constructor (depends on the kind of dataset)
-        public MyAdapter(List<String> myDataset) {
+        public MyAdapter(List<Message> myDataset) {
             mDataset = myDataset;
         }
 
@@ -69,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
         public void onBindViewHolder(MyViewHolder holder, int position) {
             // - get element from your dataset at this position
             // - replace the contents of the view with that element
-            holder.textView.setText(mDataset.get(position));
+            holder.textView.setText(mDataset.get(position).getBody());
         }
 
         // Return the size of your dataset (invoked by the layout manager)
