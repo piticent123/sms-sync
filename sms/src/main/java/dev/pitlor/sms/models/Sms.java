@@ -51,26 +51,26 @@ public class Sms {
     long threadId;
     MessageType type;
 
-    public static Sms from(Cursor c) {
+    public static Sms from(String id) {
         return Sms.builder()
-            .address(c.getString(0))
-            .body(c.getString(1))
-            .creator(c.getString(2))
-            .dateReceived(new Date(c.getInt(3)))
-            .dateSent(new Date(c.getInt(4)))
-            .errorCode(c.getInt(5))
-            .locked(c.getInt(6) == 1)
-            .senderId(c.getString(7))
-            .protocol(c.getString(8))
-            .read(c.getInt(9) == 1)
-            .replyPathPresent(c.getInt(10) == 1)
-            .seen(c.getInt(11) == 1)
-            .serviceCenter(c.getString(12))
-            .status(MessageStatus.fromCode(c.getInt(13)))
-            .subject(c.getString(14))
-            .subscriptionId(c.getLong(15))
-            .threadId(c.getLong(16))
-            .type(MessageType.fromCode(c.getInt(17)))
+//            .address(c.getString(0))
+//            .body(c.getString(1))
+//            .creator(c.getString(2))
+//            .dateReceived(new Date(c.getInt(3)))
+//            .dateSent(new Date(c.getInt(4)))
+//            .errorCode(c.getInt(5))
+//            .locked(c.getInt(6) == 1)
+//            .senderId(c.getString(7))
+//            .protocol(c.getString(8))
+//            .read(c.getInt(9) == 1)
+//            .replyPathPresent(c.getInt(10) == 1)
+//            .seen(c.getInt(11) == 1)
+//            .serviceCenter(c.getString(12))
+//            .status(MessageStatus.fromCode(c.getInt(13)))
+//            .subject(c.getString(14))
+//            .subscriptionId(c.getLong(15))
+//            .threadId(c.getLong(16))
+//            .type(MessageType.fromCode(c.getInt(17)))
             .build();
     }
 }

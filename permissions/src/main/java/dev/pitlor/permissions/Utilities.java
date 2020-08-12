@@ -1,4 +1,4 @@
-package dev.pitlor.smssync.util;
+package dev.pitlor.permissions;
 
 import java.util.List;
 
