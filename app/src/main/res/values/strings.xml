@@ -4,4 +4,6 @@
     <string name="title_sync">Sync</string>
     <string name="title_messages">Messages</string>
     <string name="title_settings">Settings</string>
+    <string name="label_last_updated">Last Updated</string>
+    <string name="label_sync_now">Sync Now</string>
 </resources>
