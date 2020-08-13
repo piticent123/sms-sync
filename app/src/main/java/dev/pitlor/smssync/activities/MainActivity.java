@@ -1,40 +1,33 @@
 package dev.pitlor.smssync.activities;
 
-import android.Manifest;
-import android.content.ContentResolver;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 
-import dev.pitlor.permissions.Permissions;
-import dev.pitlor.sms.Messages;
-import dev.pitlor.smssync.adapters.MessageAdapter;
+import dev.pitlor.smssync.R;
 import dev.pitlor.smssync.databinding.ActivityMainBinding;
 
-public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
-    private Messages messages = new Messages(this);
-    private Permissions permissions = new Permissions(this);
+public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         ActivityMainBinding view = ActivityMainBinding.inflate(getLayoutInflater());
-        permissions.assertPermission(Manifest.permission.READ_SMS);
         setContentView(view.getRoot());
 
-        view.smsList.setHasFixedSize(true);
-        view.smsList.setLayoutManager(new LinearLayoutManager(this));
-        view.smsList.setAdapter(new MessageAdapter(messages.readAll()));
+        AppBarConfiguration appBarConfiguration = new AppBarConfiguration
+            .Builder(R.id.navigation_messages, R.id.navigation_home, R.id.navigation_settings)
+            .build();
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+        NavController navController = navHostFragment.getNavController();
+        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+        NavigationUI.setupWithNavController(view.navView, navController);
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        this.permissions.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
 }

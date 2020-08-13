@@ -1,0 +1,5 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+    <SwitchPreferenceCompat
+        app:key="useGoogleDrive"
+        app:title="Save backup with Google Drive" />
+</PreferenceScreen>

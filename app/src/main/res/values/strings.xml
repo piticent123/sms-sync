@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">SMS Sync</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_sync">Sync</string>
+    <string name="title_messages">Messages</string>
+    <string name="title_settings">Settings</string>
 </resources>
