@@ -7,4 +7,9 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="CTAButton" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:paddingVertical">16sp</item>
+        <item name="android:paddingHorizontal">64sp</item>
+    </style>
+
 </resources>

@@ -1,124 +1,167 @@
 package dev.pitlor.sms.models;
 
+import android.content.ContentResolver;
+import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.provider.Telephony;
 
-import java.util.Date;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.text.MessageFormat;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 import lombok.Builder;
 import lombok.Data;
 
+import static android.provider.Telephony.Mms.CONTENT_URI;
+import static android.provider.Telephony.Mms.SUBJECT;
+import static android.provider.Telephony.Mms.THREAD_ID;
+import static android.provider.Telephony.Mms._ID;
+import static android.provider.Telephony.TextBasedSmsColumns.DATE;
+
 @Data
 @Builder
 public class Mms {
-    public static final String[] COLUMNS = new String[] {
-        Telephony.Mms.CONTENT_CLASS,
-        Telephony.Mms.CONTENT_LOCATION,
-        Telephony.Mms.CONTENT_TYPE,
-        Telephony.Mms.CREATOR,
-        Telephony.Mms.DATE,
-        Telephony.Mms.DATE_SENT,
-        Telephony.Mms.DELIVERY_REPORT,
-        Telephony.Mms.DELIVERY_TIME,
-        Telephony.Mms.EXPIRY,
-        Telephony.Mms.LOCKED,
-        Telephony.Mms.MESSAGE_BOX,
-        Telephony.Mms.MESSAGE_CLASS,
-        Telephony.Mms.MESSAGE_ID,
-        Telephony.Mms.MESSAGE_SIZE,
-        Telephony.Mms.MESSAGE_TYPE,
-        Telephony.Mms.MMS_VERSION,
-        Telephony.Mms.PRIORITY,
-        Telephony.Mms.READ,
-        Telephony.Mms.READ_REPORT,
-        Telephony.Mms.READ_STATUS,
-        Telephony.Mms.REPORT_ALLOWED,
-        Telephony.Mms.RESPONSE_STATUS,
-        Telephony.Mms.RESPONSE_TEXT,
-        Telephony.Mms.RETRIEVE_STATUS,
-        Telephony.Mms.RETRIEVE_TEXT,
-        Telephony.Mms.RETRIEVE_TEXT_CHARSET,
-        Telephony.Mms.SEEN,
-        Telephony.Mms.STATUS,
-        Telephony.Mms.SUBJECT,
-        Telephony.Mms.SUBJECT_CHARSET,
-        Telephony.Mms.SUBSCRIPTION_ID,
-        Telephony.Mms.TEXT_ONLY,
-        Telephony.Mms.THREAD_ID,
-        Telephony.Mms.TRANSACTION_ID,
-    };
-
-    String contentClass;
-    String contentLocation;
-    String contentType;
-    String creator;
-    Date dateReceived;
-    Date dateSent;
-    int deliveryReport;
-    Date deliveryTime;
-    Date expiryTime;
-    boolean locked;
-    MessageBox messageBox;
-    String messageClass;
-    String messageId;
-    int messageSize;
-    MessageType messageType;
-    int mmsVersion;
-    int priority;
-    boolean read;
-    boolean readReport;
-    int readStatus;
-    boolean reportAllowed;
-    int responseStatus;
-    String responseText;
-    int retrieveStatus;
-    String retrieveText;
-    int retrieveTextCharset;
-    boolean seen;
-    MessageStatus status;
+    Bitmap picture;
+    String address;
+    OffsetDateTime dateReceived;
     String subject;
-    int subjectCharset;
-    long subscriptionId;
-    boolean textOnly;
     long threadId;
-    String transactionId;
+    String body;
 
-    public static Mms from(String id) {
-        return Mms.builder()
-//            .contentClass(c.getString(0))
-//            .contentLocation(c.getString(1))
-//            .contentType(c.getString(2))
-//            .creator(c.getString(3))
-//            .dateReceived(new Date(c.getLong(4)))
-//            .dateSent(new Date(c.getLong(5)))
-//            .deliveryReport(c.getInt(6))
-//            .deliveryTime(new Date(c.getLong(7)))
-//            .expiryTime(new Date(c.getLong(8)))
-//            .locked(c.getInt(9) == 1)
-//            .messageBox(MessageBox.fromCode(c.getInt(10)))
-//            .messageClass(c.getString(11))
-//            .messageId(c.getString(12))
-//            .messageSize(c.getInt(13))
-//            .messageType(MessageType.fromCode(c.getInt(14)))
-//            .mmsVersion(c.getInt(15))
-//            .priority(c.getInt(16))
-//            .read(c.getInt(17) == 1)
-//            .readReport(c.getInt(18) == 1)
-//            .readStatus(c.getInt(19))
-//            .reportAllowed(c.getInt(20) == 1)
-//            .responseStatus(c.getInt(21))
-//            .responseText(c.getString(22))
-//            .retrieveStatus(c.getInt(23))
-//            .retrieveText(c.getString(24))
-//            .retrieveTextCharset(c.getInt(25))
-//            .seen(c.getInt(26) == 1)
-//            .status(MessageStatus.fromCode(c.getInt(27)))
-//            .subject(c.getString(28))
-//            .subjectCharset(c.getInt(29))
-//            .subscriptionId(c.getLong(30))
-//            .textOnly(c.getInt(31) == 1)
-//            .threadId(c.getLong(32))
-//            .transactionId(c.getString(33))
-            .build();
+    public static Mms from(Context context, String id) {
+        MmsBuilder mms = Mms.builder();
+        ContentResolver contentResolver = context.getContentResolver();
+        Cursor cursor;
+
+        // Metadata
+        cursor = contentResolver.query(
+            CONTENT_URI,
+            new String[] {DATE, SUBJECT, THREAD_ID},
+            _ID + " = ?",
+            new String[] {id},
+            null
+        );
+        if (cursor != null && cursor.moveToFirst()) {
+            mms
+                .dateReceived(OffsetDateTime.ofInstant(
+                    Instant.ofEpochMilli(cursor.getLong(cursor.getColumnIndex(DATE))), ZoneId.systemDefault()
+                ))
+                .subject(cursor.getString(cursor.getColumnIndex(SUBJECT)))
+                .threadId(cursor.getLong(cursor.getColumnIndex(THREAD_ID)));
+
+            cursor.close();
+        }
+
+        // Text/Picture
+        cursor = contentResolver.query(
+            Uri.parse("content://mms/part"),
+            null,
+            Telephony.Mms.MESSAGE_ID + " = ?",
+            new String[] {id},
+            null
+        );
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                switch (cursor.getString(cursor.getColumnIndex(Telephony.Mms.Part.CONTENT_TYPE))) {
+                    case "text/plain":
+                        String data = cursor.getString(cursor.getColumnIndex(Telephony.Mms.Part._DATA));
+                        String body;
+                        if (data != null) {
+                            body = getText(context, cursor.getString(cursor.getColumnIndex(_ID)));
+                        } else {
+                            body = cursor.getString(cursor.getColumnIndex(Telephony.Mms.Part.TEXT));
+                        }
+                        mms.body((mms.body == null ? "" : mms.body) + body);
+                        break;
+                    case "image/jpeg":
+                    case "image/bmp":
+                    case "image/gif":
+                    case "image/jpg":
+                    case "image/png":
+                        Bitmap picture = getImage(context, cursor.getString(cursor.getColumnIndex(_ID)));
+                        mms.picture(picture);
+                        break;
+                }
+            } while (cursor.moveToNext());
+            cursor.close();
+        }
+
+        // Sender
+        cursor = contentResolver.query(
+            Uri.parse(MessageFormat.format("content://mms/{0}/addr", id)),
+            null,
+            Telephony.Mms.MESSAGE_ID + " = ?",
+            new String[] {id},
+            null
+        );
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                String number = cursor.getString(cursor.getColumnIndex(Telephony.Mms.Addr.ADDRESS));
+                if (number != null) {
+                    mms.address(number);
+                    break;
+                }
+            } while (cursor.moveToNext());
+            cursor.close();
+        }
+
+        return mms.build();
+    }
+
+    private static String getText(Context context, String id) {
+        InputStream inputStream = null;
+        StringBuilder stringBuilder = new StringBuilder();
+        try {
+            inputStream = context.getContentResolver().openInputStream(Uri.parse("content://mms/part/" + id));
+            if (inputStream != null) {
+                InputStreamReader isr = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+                BufferedReader reader = new BufferedReader(isr);
+                String line = reader.readLine();
+                while (line != null) {
+                    stringBuilder.append(line);
+                    line = reader.readLine();
+                }
+            }
+        } catch (IOException e) {
+            // Do nothing
+        } finally {
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    // Do nothing
+                }
+            }
+        }
+        return stringBuilder.toString();
+    }
+
+    private static Bitmap getImage(Context context, String _id) {
+        InputStream inputStream = null;
+        Bitmap bitmap = null;
+        try {
+            inputStream = context.getContentResolver().openInputStream(Uri.parse("content://mms/part/" + _id));
+            bitmap = BitmapFactory.decodeStream(inputStream);
+        } catch (IOException e) {
+            // Do nothing
+        } finally {
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    // Do nothing
+                }
+            }
+        }
+        return bitmap;
     }
 }

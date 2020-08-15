@@ -4,7 +4,6 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-import android.provider.Telephony;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +17,7 @@ import lombok.AllArgsConstructor;
 public class Messages {
     private Context context;
 
-    public List<Message> readAll() {
+    public List<Message> readAll(int limit) {
         List<Message> messages = new ArrayList<>();
         ContentResolver contentResolver = context.getContentResolver();
         Uri uri = Uri.parse("content://mms-sms/conversations/");
@@ -30,6 +29,7 @@ public class Messages {
         if (cursor != null && cursor.moveToFirst()) {
             int idColumnIndex = cursor.getColumnIndex("_id");
             int typeIndex = cursor.getColumnIndex("ct_t");
+            int i = 0;
 
             do {
                 String string = cursor.getString(typeIndex);
@@ -38,13 +38,19 @@ public class Messages {
                 } else {
                     smsIds.add(cursor.getString(idColumnIndex));
                 }
-            } while (cursor.moveToNext());
+            } while (cursor.moveToNext() && (++i < limit));
 
             cursor.close();
         }
 
-        messages.addAll(smsIds.stream().map(Sms::from).map(Message::from).collect(Collectors.toList()));
-        messages.addAll(mmsIds.stream().map(Mms::from).map(Message::from).collect(Collectors.toList()));
+        messages.addAll(smsIds.stream()
+            .map((id) -> Sms.from(context, id))
+            .map(Message::from)
+            .collect(Collectors.toList()));
+        messages.addAll(mmsIds.stream()
+            .map((id) -> Mms.from(context, id))
+            .map(Message::from)
+            .collect(Collectors.toList()));
         return messages;
     }
 }
