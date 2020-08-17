@@ -7,18 +7,18 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="dev.pitlor.smssync.fragments.SyncFragment"
+        android:name="dev.pitlor.smssync.activities.fragments.SyncFragment"
         android:label="@string/title_sync"
         tools:layout="@layout/fragment_sync" />
 
     <fragment
         android:id="@+id/navigation_messages"
-        android:name="dev.pitlor.smssync.fragments.MessagesFragment"
+        android:name="dev.pitlor.smssync.activities.fragments.MessagesFragment"
         android:label="@string/title_messages"
         tools:layout="@layout/fragment_messages" />
 
     <fragment
         android:id="@+id/navigation_settings"
-        android:name="dev.pitlor.smssync.fragments.SettingsFragment"
+        android:name="dev.pitlor.smssync.activities.fragments.SettingsFragment"
         android:label="@string/title_settings" />
 </navigation>

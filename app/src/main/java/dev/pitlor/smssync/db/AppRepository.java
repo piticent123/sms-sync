@@ -1,4 +1,4 @@
-package dev.pitlor.smssync;
+package dev.pitlor.smssync.db;
 
 import android.content.Context;
 
@@ -6,9 +6,9 @@ import androidx.lifecycle.LiveData;
 
 import java.time.OffsetDateTime;
 
-import dev.pitlor.smssync.daos.MessageDao;
-import dev.pitlor.smssync.daos.SyncDao;
-import dev.pitlor.smssync.entities.Sync;
+import dev.pitlor.smssync.db.daos.MessageDao;
+import dev.pitlor.smssync.db.daos.SyncDao;
+import dev.pitlor.smssync.db.entities.Sync;
 
 public class AppRepository {
     private SyncDao syncDao;

@@ -1,4 +1,4 @@
-package dev.pitlor.smssync.fragments;
+package dev.pitlor.smssync.activities.fragments;
 
 import android.content.Context;
 import android.os.Bundle;

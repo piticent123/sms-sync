@@ -1,4 +1,4 @@
-package dev.pitlor.smssync.fragments;
+package dev.pitlor.smssync.activities.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
