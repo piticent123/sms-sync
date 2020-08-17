@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import dev.pitlor.sms.models.Mms;
 import dev.pitlor.sms.models.Sms;
 import lombok.AllArgsConstructor;
 
@@ -47,10 +46,11 @@ public class Messages {
             .map((id) -> Sms.from(context, id))
             .map(Message::from)
             .collect(Collectors.toList()));
-        messages.addAll(mmsIds.stream()
-            .map((id) -> Mms.from(context, id))
-            .map(Message::from)
-            .collect(Collectors.toList()));
+//        messages.addAll(mmsIds.stream()
+//            .map((id) -> Mms.from(context, id))
+//            .map(Message::from)
+//            .collect(Collectors.toList()));
+
         return messages;
     }
 }

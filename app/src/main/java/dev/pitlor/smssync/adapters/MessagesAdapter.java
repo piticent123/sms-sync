@@ -5,11 +5,13 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
 import dev.pitlor.sms.Message;
+import dev.pitlor.smssync.R;
 import dev.pitlor.smssync.databinding.MessagesListItemBinding;
 import lombok.AllArgsConstructor;
 
@@ -21,7 +23,8 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
     @NonNull
     @Override
     public MessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        MessagesListItemBinding view = MessagesListItemBinding.inflate(LayoutInflater.from(context));
+        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        MessagesListItemBinding view = DataBindingUtil.inflate(layoutInflater, R.layout.messages_list_item, parent, false);
         return new MessageViewHolder(view);
     }
 
@@ -45,8 +48,8 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
         }
 
         public void setMessage(Message message) {
-            itemView.messageSender.setText(message.getSender());
-            itemView.messageBody.setText(message.getBody());
+            itemView.setSender(message.getSender());
+            itemView.setBody(message.getBody());
         }
     }
 }

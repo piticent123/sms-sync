@@ -1,5 +1,6 @@
 package dev.pitlor.smssync.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +23,8 @@ public class MessagesFragment extends Fragment {
     List<Message> messageList;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Messages messages = new Messages(getContext());
+        Context context = getContext();
+        Messages messages = new Messages(context);
         messageList = messages
             .readAll(5)
             .stream()
@@ -34,8 +36,8 @@ public class MessagesFragment extends Fragment {
             return view.getRoot();
         } else {
             FragmentMessagesBinding view = FragmentMessagesBinding.inflate(inflater);
-            view.messages.setLayoutManager(new LinearLayoutManager(getContext()));
-            view.messages.setAdapter(new MessagesAdapter(getContext(), messageList));
+            view.messagesList.setLayoutManager(new LinearLayoutManager(context));
+            view.messagesList.setAdapter(new MessagesAdapter(context, messageList));
             return view.getRoot();
         }
     }
