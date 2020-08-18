@@ -29,12 +29,16 @@ public class MessagesFragment extends Fragment {
     private FragmentMessagesBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        int result = MainActivity.getInstance().checkSelfPermission(Manifest.permission.READ_SMS);
-        if (result == PackageManager.PERMISSION_GRANTED) {
-            new Thread(this::fetchData).start();
-        } else {
-            requestPermissions(new String[]{Manifest.permission.READ_SMS}, 0);
-        }
+        new Thread(() -> {
+            int readSmsResult = MainActivity.getInstance().checkSelfPermission(Manifest.permission.READ_SMS);
+            int readContactsResult = MainActivity.getInstance().checkSelfPermission(Manifest.permission.READ_CONTACTS);
+            if (readSmsResult == PackageManager.PERMISSION_GRANTED && readContactsResult == PackageManager.PERMISSION_GRANTED) {
+                fetchData();
+            } else {
+                // owncloud, onedrive, something custom, google drive...
+                requestPermissions(new String[]{Manifest.permission.READ_SMS}, 0);
+            }
+        }).start();
 
         binding = FragmentMessagesBinding.inflate(inflater);
         return binding.getRoot();
@@ -65,5 +69,4 @@ public class MessagesFragment extends Fragment {
             }
         });
     }
-
 }
