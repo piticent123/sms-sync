@@ -42,7 +42,6 @@ public class Permissions {
     }
 
     public void onRequestPermissionsResult(int requestCode, String[] permissions, @NonNull int[] grantResults) {
-        System.out.println("Got results");
         List<Integer> r = new ArrayList<>();
         for (int grantResult : grantResults) {
             r.add(grantResult);
