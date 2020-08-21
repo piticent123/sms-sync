@@ -1,4 +1,3 @@
-include ':permissions'
 include ':sms'
 include ':app'
 rootProject.name = "SMS Sync"

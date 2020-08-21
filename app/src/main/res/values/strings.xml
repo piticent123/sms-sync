@@ -11,4 +11,5 @@
     <string name="label_no_messages">No Messages</string>
     <string name="label_please_sync_messages">Please sync messages to view them</string>
     <string name="label_syncing_messages">Syncing Messages...</string>
+    <string name="mms_image_content_description">MMS Image</string>
 </resources>

@@ -1,7 +1,6 @@
 package dev.pitlor.sms;
 
-import android.graphics.Bitmap;
-
+import java.io.File;
 import java.time.OffsetDateTime;
 
 import dev.pitlor.sms.models.Mms;
@@ -17,7 +16,7 @@ public class Message {
     String body;
     String subject;
     long threadId;
-    Bitmap image;
+    File image;
 
     public static Message from(Mms mms) {
         return Message.builder()

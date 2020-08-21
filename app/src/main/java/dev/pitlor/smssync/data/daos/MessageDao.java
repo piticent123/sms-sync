@@ -1,4 +1,4 @@
-package dev.pitlor.smssync.db.daos;
+package dev.pitlor.smssync.data.daos;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
@@ -9,8 +9,8 @@ import androidx.room.Transaction;
 
 import java.util.List;
 
-import dev.pitlor.smssync.db.dto.MessageDTO;
-import dev.pitlor.smssync.db.entities.Message;
+import dev.pitlor.smssync.data.dto.MessageDTO;
+import dev.pitlor.smssync.data.entities.Message;
 
 @Dao
 public interface MessageDao {

@@ -1,10 +1,10 @@
-package dev.pitlor.smssync.db.dto;
+package dev.pitlor.smssync.data.dto;
 
 import androidx.room.Embedded;
 import androidx.room.Relation;
 
-import dev.pitlor.smssync.db.entities.Contact;
-import dev.pitlor.smssync.db.entities.Message;
+import dev.pitlor.smssync.data.entities.Contact;
+import dev.pitlor.smssync.data.entities.Message;
 
 public class MessageDTO {
     @Embedded

@@ -2,11 +2,14 @@ package dev.pitlor.smssync.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -52,6 +55,11 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
         public void setMessage(Message message) {
             itemView.setSender(message.getSender());
             itemView.setBody(message.getBody());
+            if (message.getImage() != null) {
+                Picasso.get().load(message.getImage()).into(itemView.messageImage);
+            } else {
+                itemView.messageImage.setVisibility(View.GONE);
+            }
         }
     }
 }

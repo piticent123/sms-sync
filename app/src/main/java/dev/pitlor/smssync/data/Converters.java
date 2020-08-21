@@ -1,4 +1,4 @@
-package dev.pitlor.smssync.db;
+package dev.pitlor.smssync.data;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

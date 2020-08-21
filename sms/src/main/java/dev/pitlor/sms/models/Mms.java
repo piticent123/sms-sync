@@ -3,12 +3,12 @@ package dev.pitlor.sms.models;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.Telephony;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -24,7 +24,7 @@ import lombok.Data;
 @Data
 @Builder
 public class Mms {
-    Bitmap picture;
+    File picture;
     String address;
     OffsetDateTime dateReceived;
     String subject;
@@ -82,7 +82,7 @@ public class Mms {
                     case "image/gif":
                     case "image/jpg":
                     case "image/png":
-                        Bitmap picture = getImage(context, cursor.getString(cursor.getColumnIndex(Telephony.Mms._ID)));
+                        File picture = getImage(context, cursor.getString(cursor.getColumnIndex(Telephony.Mms._ID)), id);
                         mms.picture(picture);
                         break;
                 }
@@ -140,23 +140,27 @@ public class Mms {
         return stringBuilder.toString();
     }
 
-    private static Bitmap getImage(Context context, String id) {
-        InputStream inputStream = null;
-        Bitmap bitmap = null;
-        try {
-            inputStream = context.getContentResolver().openInputStream(Uri.parse("content://mms/part/" + id));
-            bitmap = BitmapFactory.decodeStream(inputStream);
-        } catch (IOException e) {
-            // Do nothing
-        } finally {
-            if (inputStream != null) {
-                try {
-                    inputStream.close();
-                } catch (IOException e) {
-                    // Do nothing
-                }
-            }
+    private static File getImage(Context context, String partId, String messageId) {
+        File file = new File(context.getCacheDir(), messageId + "_" + partId + ".png");
+        if (file.exists()) {
+            return file;
         }
-        return bitmap;
+
+        ContentResolver contentResolver = context.getContentResolver();
+        try (InputStream inputStream = contentResolver.openInputStream(Uri.parse("content://mms/part/" + partId))) {
+            if (inputStream == null) {
+                return null;
+            }
+
+            byte[] buffer = new byte[inputStream.available()];
+            //noinspection ResultOfMethodCallIgnored
+            inputStream.read(buffer);
+            FileOutputStream outputStream = new FileOutputStream(file);
+            outputStream.write(buffer);
+        } catch (Exception e) {
+            // Do nothing
+        }
+
+        return file;
     }
 }

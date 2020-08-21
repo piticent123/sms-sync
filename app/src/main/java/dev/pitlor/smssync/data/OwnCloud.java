@@ -1,4 +1,4 @@
-package dev.pitlor.smssync.db;
+package dev.pitlor.smssync.data;
 
 import com.thegrizzlylabs.sardineandroid.Sardine;
 import com.thegrizzlylabs.sardineandroid.impl.OkHttpSardine;

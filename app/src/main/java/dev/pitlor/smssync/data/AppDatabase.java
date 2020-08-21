@@ -1,4 +1,4 @@
-package dev.pitlor.smssync.db;
+package dev.pitlor.smssync.data;
 
 import android.content.Context;
 
@@ -11,12 +11,12 @@ import androidx.room.migration.Migration;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import dev.pitlor.smssync.db.daos.ContactDao;
-import dev.pitlor.smssync.db.daos.MessageDao;
-import dev.pitlor.smssync.db.daos.SyncDao;
-import dev.pitlor.smssync.db.entities.Contact;
-import dev.pitlor.smssync.db.entities.Message;
-import dev.pitlor.smssync.db.entities.Sync;
+import dev.pitlor.smssync.data.daos.ContactDao;
+import dev.pitlor.smssync.data.daos.MessageDao;
+import dev.pitlor.smssync.data.daos.SyncDao;
+import dev.pitlor.smssync.data.entities.Contact;
+import dev.pitlor.smssync.data.entities.Message;
+import dev.pitlor.smssync.data.entities.Sync;
 
 @Database(entities = {Message.class, Sync.class, Contact.class}, version = 1)
 @TypeConverters({Converters.class})
