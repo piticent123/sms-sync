@@ -55,10 +55,6 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
 
         public void setMessage(Message message) {
             itemView.getViewModel().setMessage(message);
-
-            if (message.getImage() != null) {
-                Picasso.get().load(message.getImage()).into(itemView.messageImage);
-            }
         }
     }
 }

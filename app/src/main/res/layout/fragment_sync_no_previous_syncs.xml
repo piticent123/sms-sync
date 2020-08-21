@@ -4,9 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
-        <import type="android.view.View" />
-
         <variable
             name="viewModel"
             type="dev.pitlor.smssync.viewmodels.SyncEmptyStateViewModel" />
@@ -37,7 +34,7 @@
             android:layout_width="204dp"
             android:layout_height="wrap_content"
             android:text="@string/label_sync_now"
-            android:onClick="@{viewModel.handleClickSync}"
+            android:onClick="@{viewModel::handleClickSync}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/action_find_previous_sync_data"
             app:layout_constraintHorizontal_bias="0.5"

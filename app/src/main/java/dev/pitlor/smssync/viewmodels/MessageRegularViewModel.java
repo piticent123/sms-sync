@@ -6,20 +6,19 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
+import java.util.List;
+
 import dev.pitlor.smssync.data.AppDatabase;
 import dev.pitlor.smssync.data.daos.MessageDao;
+import dev.pitlor.smssync.data.dto.MessageDTO;
 
-public class MessageFragmentViewModel extends AndroidViewModel {
-    public LiveData<Integer> messagesCount;
+public class MessageRegularViewModel extends AndroidViewModel {
+    public LiveData<List<MessageDTO>> messages;
 
-    public MessageFragmentViewModel(@NonNull Application application) {
+    public MessageRegularViewModel(@NonNull Application application) {
         super(application);
         MessageDao messageDao = AppDatabase.getInstance(application).messageDao();
 
-        messagesCount = messageDao.size();
-    }
-
-    public boolean isLoading() {
-        return messagesCount == null;
+        messages = messageDao.getAll();
     }
 }
