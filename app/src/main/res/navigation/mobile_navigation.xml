@@ -9,7 +9,7 @@
         android:id="@+id/navigation_home"
         android:name="dev.pitlor.smssync.activities.fragments.SyncFragment"
         android:label="@string/title_sync"
-        tools:layout="@layout/fragment_sync" />
+        tools:layout="@layout/fragment_sync_regular" />
 
     <fragment
         android:id="@+id/navigation_messages"

@@ -7,22 +7,17 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-
-import java.time.OffsetDateTime;
+import androidx.lifecycle.ViewModelProvider;
 
 import dev.pitlor.smssync.databinding.FragmentSyncBinding;
-import dev.pitlor.smssync.databinding.FragmentSyncNoPreviousSyncsBinding;
+import dev.pitlor.smssync.viewmodels.SyncFragmentViewModel;
 
 public class SyncFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        OffsetDateTime lastSync = null;
+        SyncFragmentViewModel viewModel = new ViewModelProvider(this).get(SyncFragmentViewModel.class);
+        FragmentSyncBinding view = FragmentSyncBinding.inflate(inflater);
 
-        if (lastSync == null) {
-            FragmentSyncNoPreviousSyncsBinding view = FragmentSyncNoPreviousSyncsBinding.inflate(inflater);
-            return view.getRoot();
-        } else {
-            FragmentSyncBinding view = FragmentSyncBinding.inflate(inflater);
-            return view.getRoot();
-        }
+        view.setViewModel(viewModel);
+        return view.getRoot();
     }
 }

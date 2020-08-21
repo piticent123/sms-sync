@@ -2,7 +2,6 @@ package dev.pitlor.smssync.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -16,12 +15,13 @@ import java.util.List;
 import dev.pitlor.sms.Message;
 import dev.pitlor.smssync.R;
 import dev.pitlor.smssync.databinding.MessagesListItemBinding;
+import dev.pitlor.smssync.viewmodels.ConversationsListItemViewModel;
 
 public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.MessageViewHolder> {
     private List<Message> messages;
     private LayoutInflater layoutInflater;
 
-    public MessagesAdapter(Context context, List<Message> messages) {
+    public MessagesAdapter(@NonNull Context context, List<Message> messages) {
         this.messages = messages;
         layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
@@ -50,15 +50,14 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
         public MessageViewHolder(@NonNull MessagesListItemBinding itemView) {
             super(itemView.getRoot());
             this.itemView = itemView;
+            itemView.setViewModel(new ConversationsListItemViewModel());
         }
 
         public void setMessage(Message message) {
-            itemView.setSender(message.getSender());
-            itemView.setBody(message.getBody());
+            itemView.getViewModel().setMessage(message);
+
             if (message.getImage() != null) {
                 Picasso.get().load(message.getImage()).into(itemView.messageImage);
-            } else {
-                itemView.messageImage.setVisibility(View.GONE);
             }
         }
     }

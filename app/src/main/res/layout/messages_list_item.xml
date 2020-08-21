@@ -4,12 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.view.View" />
         <variable
-            name="sender"
-            type="String" />
-        <variable
-            name="body"
-            type="String" />
+            name="viewModel"
+            type="dev.pitlor.smssync.viewmodels.ConversationsListItemViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -37,7 +35,7 @@
                     android:id="@+id/message_sender"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{sender}"
+                    android:text="@{viewModel.message.sender}"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="@android:color/black"
                     app:layout_constraintBottom_toTopOf="@+id/message_body"
@@ -51,7 +49,7 @@
                     android:layout_height="0dp"
                     android:ellipsize="end"
                     android:maxLines="2"
-                    android:text="@{body}"
+                    android:text="@{viewModel.message.body}"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/message_image"
@@ -64,6 +62,7 @@
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:contentDescription="@string/mms_image_content_description"
+                    android:visibility="@{viewModel.message.image == null ? View.GONE : View.VISIBLE}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintDimensionRatio="1:1"
                     app:layout_constraintEnd_toEndOf="parent"
