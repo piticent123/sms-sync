@@ -2,15 +2,12 @@ package dev.pitlor.smssync.activities;
 
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import dev.pitlor.permissions.Permissions;
 import dev.pitlor.smssync.R;
 import dev.pitlor.smssync.databinding.ActivityMainBinding;
 

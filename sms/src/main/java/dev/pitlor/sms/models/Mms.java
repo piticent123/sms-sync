@@ -21,12 +21,6 @@ import java.time.ZoneId;
 import lombok.Builder;
 import lombok.Data;
 
-import static android.provider.Telephony.Mms.CONTENT_URI;
-import static android.provider.Telephony.Mms.SUBJECT;
-import static android.provider.Telephony.Mms.THREAD_ID;
-import static android.provider.Telephony.Mms._ID;
-import static android.provider.Telephony.TextBasedSmsColumns.DATE;
-
 @Data
 @Builder
 public class Mms {
@@ -44,29 +38,30 @@ public class Mms {
 
         // Metadata
         cursor = contentResolver.query(
-            CONTENT_URI,
-            new String[] {DATE, SUBJECT, THREAD_ID},
-            _ID + " = ?",
-            new String[] {id},
+            Telephony.Mms.CONTENT_URI,
+            new String[]{Telephony.Mms.DATE, Telephony.Mms.SUBJECT, Telephony.Mms.THREAD_ID},
+            "_id = ?",
+            new String[]{id},
             null
         );
         if (cursor != null && cursor.moveToFirst()) {
+            String subject = cursor.getString(cursor.getColumnIndex(Telephony.Mms.SUBJECT));
+            Instant dateRecieved = Instant.ofEpochSecond(cursor.getLong(cursor.getColumnIndex(Telephony.Mms.DATE)));
+
             mms
-                .dateReceived(OffsetDateTime.ofInstant(
-                    Instant.ofEpochMilli(cursor.getLong(cursor.getColumnIndex(DATE))), ZoneId.systemDefault()
-                ))
-                .subject(cursor.getString(cursor.getColumnIndex(SUBJECT)))
-                .threadId(cursor.getLong(cursor.getColumnIndex(THREAD_ID)));
+                .dateReceived(OffsetDateTime.ofInstant(dateRecieved, ZoneId.systemDefault()))
+                .subject(subject != null ? subject : "")
+                .threadId(cursor.getLong(cursor.getColumnIndex(Telephony.Mms.THREAD_ID)));
 
             cursor.close();
         }
 
         // Text/Picture
         cursor = contentResolver.query(
-            Uri.parse("content://mms/part"),
+            Telephony.Mms.Part.CONTENT_URI,
             null,
-            Telephony.Mms.MESSAGE_ID + " = ?",
-            new String[] {id},
+            Telephony.Mms.Part.MSG_ID + " = ?",
+            new String[]{id},
             null
         );
         if (cursor != null && cursor.moveToFirst()) {
@@ -76,7 +71,7 @@ public class Mms {
                         String data = cursor.getString(cursor.getColumnIndex(Telephony.Mms.Part._DATA));
                         String body;
                         if (data != null) {
-                            body = getText(context, cursor.getString(cursor.getColumnIndex(_ID)));
+                            body = getText(context, cursor.getString(cursor.getColumnIndex(Telephony.Mms.Part._ID)));
                         } else {
                             body = cursor.getString(cursor.getColumnIndex(Telephony.Mms.Part.TEXT));
                         }
@@ -87,7 +82,7 @@ public class Mms {
                     case "image/gif":
                     case "image/jpg":
                     case "image/png":
-                        Bitmap picture = getImage(context, cursor.getString(cursor.getColumnIndex(_ID)));
+                        Bitmap picture = getImage(context, cursor.getString(cursor.getColumnIndex(Telephony.Mms._ID)));
                         mms.picture(picture);
                         break;
                 }
@@ -99,8 +94,8 @@ public class Mms {
         cursor = contentResolver.query(
             Uri.parse(MessageFormat.format("content://mms/{0}/addr", id)),
             null,
-            Telephony.Mms.MESSAGE_ID + " = ?",
-            new String[] {id},
+            Telephony.Mms.Addr.MSG_ID + " = ?",
+            new String[]{id},
             null
         );
         if (cursor != null && cursor.moveToFirst()) {
@@ -145,11 +140,11 @@ public class Mms {
         return stringBuilder.toString();
     }
 
-    private static Bitmap getImage(Context context, String _id) {
+    private static Bitmap getImage(Context context, String id) {
         InputStream inputStream = null;
         Bitmap bitmap = null;
         try {
-            inputStream = context.getContentResolver().openInputStream(Uri.parse("content://mms/part/" + _id));
+            inputStream = context.getContentResolver().openInputStream(Uri.parse("content://mms/part/" + id));
             bitmap = BitmapFactory.decodeStream(inputStream);
         } catch (IOException e) {
             // Do nothing

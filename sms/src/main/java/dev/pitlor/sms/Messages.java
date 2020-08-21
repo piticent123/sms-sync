@@ -9,22 +9,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import dev.pitlor.sms.models.Mms;
 import dev.pitlor.sms.models.Sms;
-import lombok.AllArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class Messages {
-    private Context context;
+    @NonNull private Context context;
+    private Uri CONVERSATIONS_URI = Uri.parse("content://mms-sms/conversations/");
 
     public List<Message> readAll(int limit) {
         List<Message> messages = new ArrayList<>();
         ContentResolver contentResolver = context.getContentResolver();
-        Uri uri = Uri.parse("content://mms-sms/conversations/");
         final String[] projection = new String[]{"_id", "ct_t"};
 
         List<String> smsIds = new ArrayList<>();
         List<String> mmsIds = new ArrayList<>();
-        Cursor cursor = contentResolver.query(uri, projection, null, null, null);
+        Cursor cursor = contentResolver.query(CONVERSATIONS_URI, projection, null, null, null);
         if (cursor != null && cursor.moveToFirst()) {
             int idColumnIndex = cursor.getColumnIndex("_id");
             int typeIndex = cursor.getColumnIndex("ct_t");
@@ -46,10 +48,10 @@ public class Messages {
             .map((id) -> Sms.from(context, id))
             .map(Message::from)
             .collect(Collectors.toList()));
-//        messages.addAll(mmsIds.stream()
-//            .map((id) -> Mms.from(context, id))
-//            .map(Message::from)
-//            .collect(Collectors.toList()));
+        messages.addAll(mmsIds.stream()
+            .map((id) -> Mms.from(context, id))
+            .map(Message::from)
+            .collect(Collectors.toList()));
 
         return messages;
     }

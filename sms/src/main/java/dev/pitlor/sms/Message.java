@@ -21,6 +21,7 @@ public class Message {
 
     public static Message from(Mms mms) {
         return Message.builder()
+            .sender(mms.getAddress())
             .date(mms.getDateReceived())
             .body(mms.getBody())
             .subject(mms.getSubject())

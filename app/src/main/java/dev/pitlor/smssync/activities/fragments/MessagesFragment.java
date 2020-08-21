@@ -13,17 +13,12 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import dev.pitlor.sms.Message;
 import dev.pitlor.sms.Messages;
-import dev.pitlor.smssync.R;
 import dev.pitlor.smssync.activities.MainActivity;
 import dev.pitlor.smssync.adapters.MessagesAdapter;
 import dev.pitlor.smssync.databinding.FragmentMessagesBinding;
-import dev.pitlor.smssync.databinding.FragmentMessagesNoMessagesBinding;
-import dev.pitlor.smssync.databinding.FragmentMessagesRegularBinding;
-import dev.pitlor.smssync.databinding.LayoutLoadingBinding;
 
 public class MessagesFragment extends Fragment {
     private FragmentMessagesBinding binding;
@@ -52,11 +47,7 @@ public class MessagesFragment extends Fragment {
 
     private void fetchData() {
         Context context = getContext();
-        List<Message> messages = new Messages(context)
-                .readAll(5)
-                .stream()
-                .filter(x -> x.getSender() != null && x.getBody() != null)
-                .collect(Collectors.toList());
+        List<Message> messages = new Messages(context).readAll(30);
 
         MainActivity.getInstance().runOnUiThread(() -> {
             binding.loadingState.getRoot().setVisibility(View.GONE);

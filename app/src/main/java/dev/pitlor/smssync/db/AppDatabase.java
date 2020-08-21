@@ -11,13 +11,14 @@ import androidx.room.migration.Migration;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import dev.pitlor.smssync.db.daos.ContactDao;
 import dev.pitlor.smssync.db.daos.MessageDao;
 import dev.pitlor.smssync.db.daos.SyncDao;
-import dev.pitlor.smssync.db.entities.Converters;
+import dev.pitlor.smssync.db.entities.Contact;
 import dev.pitlor.smssync.db.entities.Message;
 import dev.pitlor.smssync.db.entities.Sync;
 
-@Database(entities = {Message.class, Sync.class}, version = 1, exportSchema = false)
+@Database(entities = {Message.class, Sync.class, Contact.class}, version = 1)
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
     private static volatile AppDatabase instance;
@@ -25,6 +26,7 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public abstract MessageDao messageDao();
     public abstract SyncDao syncDao();
+    public abstract ContactDao contactDao();
 
     public static final Migration[] migrations = new Migration[] {
 
