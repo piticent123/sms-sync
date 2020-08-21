@@ -47,14 +47,18 @@ public class MessagesFragment extends Fragment {
 
     private void fetchData() {
         Context context = getContext();
-        List<Message> messages = new Messages(context).readAll(30);
+        if (context == null) {
+            return;
+        }
 
+        List<Message> messages = new Messages(context).readAll(30);
         MainActivity.getInstance().runOnUiThread(() -> {
             binding.loadingState.getRoot().setVisibility(View.GONE);
             if (messages.size() == 0) {
                 binding.emptyState.getRoot().setVisibility(View.VISIBLE);
             } else {
                 binding.regularState.messagesList.setLayoutManager(new LinearLayoutManager(context));
+                binding.regularState.messagesList.setHasFixedSize(true);
                 binding.regularState.messagesList.setAdapter(new MessagesAdapter(context, messages));
                 binding.regularState.getRoot().setVisibility(View.VISIBLE);
             }

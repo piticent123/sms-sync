@@ -13,17 +13,19 @@ import java.util.List;
 import dev.pitlor.sms.Message;
 import dev.pitlor.smssync.R;
 import dev.pitlor.smssync.databinding.MessagesListItemBinding;
-import lombok.AllArgsConstructor;
 
-@AllArgsConstructor
 public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.MessageViewHolder> {
-    private Context context;
     private List<Message> messages;
+    private LayoutInflater layoutInflater;
+
+    public MessagesAdapter(Context context, List<Message> messages) {
+        this.messages = messages;
+        layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    }
 
     @NonNull
     @Override
     public MessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         MessagesListItemBinding view = DataBindingUtil.inflate(layoutInflater, R.layout.messages_list_item, parent, false);
         return new MessageViewHolder(view);
     }
