@@ -8,9 +8,9 @@ import androidx.lifecycle.LiveData;
 
 import java.util.List;
 
-import dev.pitlor.smssync.data.AppDatabase;
-import dev.pitlor.smssync.data.daos.MessageDao;
-import dev.pitlor.smssync.data.dto.MessageDTO;
+import dev.pitlor.smssync.datasources.AppDatabase;
+import dev.pitlor.smssync.datasources.daos.MessageDao;
+import dev.pitlor.smssync.datasources.dto.MessageDTO;
 
 public class MessageRegularViewModel extends AndroidViewModel {
     public LiveData<List<MessageDTO>> messages;

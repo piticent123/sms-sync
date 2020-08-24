@@ -1,4 +1,4 @@
-package dev.pitlor.smssync.data.daos;
+package dev.pitlor.smssync.datasources.daos;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
@@ -6,7 +6,7 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import dev.pitlor.smssync.data.entities.Contact;
+import dev.pitlor.smssync.datasources.entities.Contact;
 
 @Dao
 public interface ContactDao {

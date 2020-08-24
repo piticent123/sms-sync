@@ -1,4 +1,4 @@
-package dev.pitlor.smssync.data.daos;
+package dev.pitlor.smssync.datasources.daos;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
@@ -7,7 +7,7 @@ import androidx.room.Query;
 
 import java.time.OffsetDateTime;
 
-import dev.pitlor.smssync.data.entities.Sync;
+import dev.pitlor.smssync.datasources.entities.Sync;
 
 @Dao
 public interface SyncDao {

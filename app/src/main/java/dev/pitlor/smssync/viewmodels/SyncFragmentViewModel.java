@@ -8,8 +8,8 @@ import androidx.lifecycle.LiveData;
 
 import java.time.OffsetDateTime;
 
-import dev.pitlor.smssync.data.AppDatabase;
-import dev.pitlor.smssync.data.daos.SyncDao;
+import dev.pitlor.smssync.datasources.AppDatabase;
+import dev.pitlor.smssync.datasources.daos.SyncDao;
 
 public class SyncFragmentViewModel extends AndroidViewModel {
     public LiveData<OffsetDateTime> lastSync;

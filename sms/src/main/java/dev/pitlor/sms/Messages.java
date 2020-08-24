@@ -39,7 +39,7 @@ public class Messages {
                 } else {
                     smsIds.add(cursor.getString(idColumnIndex));
                 }
-            } while (cursor.moveToNext() && (++i < limit));
+            } while (cursor.moveToNext() && (limit == -1 || ++i < limit));
 
             cursor.close();
         }
@@ -54,5 +54,9 @@ public class Messages {
             .collect(Collectors.toList()));
 
         return messages;
+    }
+
+    public List<Message> readAll() {
+        return readAll(-1);
     }
 }

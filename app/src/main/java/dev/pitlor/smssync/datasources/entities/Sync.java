@@ -1,4 +1,4 @@
-package dev.pitlor.smssync.data.entities;
+package dev.pitlor.smssync.datasources.entities;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
