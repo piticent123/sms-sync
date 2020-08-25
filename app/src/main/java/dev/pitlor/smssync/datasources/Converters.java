@@ -9,6 +9,8 @@ import androidx.room.TypeConverter;
 import java.io.ByteArrayOutputStream;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.List;
 
 public class Converters {
     private DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
@@ -32,8 +34,23 @@ public class Converters {
     }
 
     @TypeConverter
-    public Bitmap fromString(String encodedString) {
+    public Bitmap toBitmap(String encodedString) {
         byte[] decodedBytes = Base64.decode(encodedString, Base64.DEFAULT);
         return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+    }
+
+    @TypeConverter
+    public String fromList(List<String> list) {
+        StringBuilder result = new StringBuilder(list.get(0));
+        for (int i = 1; i < list.size(); i++) {
+            result.append(",").append(list.get(i));
+        }
+
+        return result.toString();
+    }
+
+    @TypeConverter
+    public List<String> toList(String string) {
+        return Arrays.asList(string.split(","));
     }
 }

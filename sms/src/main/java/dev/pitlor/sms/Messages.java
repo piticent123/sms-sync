@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,7 +20,7 @@ public class Messages {
     @NonNull private Context context;
     private Uri CONVERSATIONS_URI = Uri.parse("content://mms-sms/conversations/");
 
-    public List<Message> readAll(int limit) {
+    public List<Message> readAllAfter(OffsetDateTime minimumTime) {
         List<Message> messages = new ArrayList<>();
         ContentResolver contentResolver = context.getContentResolver();
         final String[] projection = new String[]{"_id", "ct_t"};
@@ -30,7 +31,6 @@ public class Messages {
         if (cursor != null && cursor.moveToFirst()) {
             int idColumnIndex = cursor.getColumnIndex("_id");
             int typeIndex = cursor.getColumnIndex("ct_t");
-            int i = 0;
 
             do {
                 String string = cursor.getString(typeIndex);
@@ -39,7 +39,7 @@ public class Messages {
                 } else {
                     smsIds.add(cursor.getString(idColumnIndex));
                 }
-            } while (cursor.moveToNext() && (limit == -1 || ++i < limit));
+            } while (cursor.moveToNext());
 
             cursor.close();
         }
@@ -54,9 +54,5 @@ public class Messages {
             .collect(Collectors.toList()));
 
         return messages;
-    }
-
-    public List<Message> readAll() {
-        return readAll(-1);
     }
 }

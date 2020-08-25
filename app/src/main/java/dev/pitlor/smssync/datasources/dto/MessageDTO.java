@@ -10,6 +10,6 @@ public class MessageDTO {
     @Embedded
     public Message content;
 
-    @Relation(parentColumn = "sender", entityColumn = "phoneNumber")
+    @Relation(parentColumn = "sender", entityColumn = "phoneNumbers")
     public Contact sender;
 }

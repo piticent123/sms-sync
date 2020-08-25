@@ -44,11 +44,11 @@ public class BaseViewModel extends AndroidViewModel {
     }
 
     public void sync() {
-        appDatabase.addSync();
-
-        // Get contacts
-
-        List<Message> messages = messageUtils.readAll();
-        appDatabase.addMessages(messages);
+//        appDatabase.addSync();
+//
+//        // Get contacts
+//
+//        List<Message> messages = messageUtils.readAllAfter(null);
+//        appDatabase.addMessages(messages);
     }
 }

@@ -7,6 +7,7 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Transaction;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import dev.pitlor.smssync.datasources.dto.MessageDTO;
@@ -25,8 +26,11 @@ public interface MessageDao {
     @Query("SELECT SUM(id) FROM message GROUP BY id")
     LiveData<Integer> size();
 
+    @Query("SELECT date FROM message ORDER BY date DESC LIMIT 1")
+    LiveData<OffsetDateTime> timeOfLastSavedText();
+
     @Insert
-    void insertAll(Message... messages);
+    void insertAll(List<Message> messages);
 
     @Delete
     void delete(Message message);
