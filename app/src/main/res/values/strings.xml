@@ -10,6 +10,16 @@
     <string name="label_no_previous_syncs_found">No Previous Syncs Found</string>
     <string name="label_no_messages">No Messages</string>
     <string name="label_please_sync_messages">Please sync messages to view them</string>
-    <string name="label_syncing_messages">Syncing Messages...</string>
+    <string name="label_syncing_messages">Syncing Messages…</string>
     <string name="mms_image_content_description">MMS Image</string>
+    <string-array name="cloud_backup_provider_values">
+        <item>google_drive</item>
+        <item>onedrive</item>
+        <item>owncloud</item>
+    </string-array>
+    <string-array name="cloud_backup_provider_entries">
+        <item>Google Drive</item>
+        <item>OneDrive</item>
+        <item>OwnCloud</item>
+    </string-array>
 </resources>

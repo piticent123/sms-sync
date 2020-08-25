@@ -1,6 +1,5 @@
 package dev.pitlor.smssync.activities.fragments;
 
-import android.Manifest;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,25 +9,15 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import dev.pitlor.smssync.activities.MainActivity;
 import dev.pitlor.smssync.databinding.FragmentMessagesBinding;
 import dev.pitlor.smssync.viewmodels.MessageFragmentViewModel;
 import dev.pitlor.smssync.viewmodels.MessageRegularViewModel;
 
 public class MessagesFragment extends Fragment {
-    private FragmentMessagesBinding binding;
-
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        new Thread(() -> {
-            int readSmsResult = MainActivity.getInstance().checkSelfPermission(Manifest.permission.READ_SMS);
-            int readContactsResult = MainActivity.getInstance().checkSelfPermission(Manifest.permission.READ_CONTACTS);
-            // owncloud, onedrive, something custom, google drive...
-            requestPermissions(new String[]{Manifest.permission.READ_SMS}, 0);
-        }).start();
-
-        binding = FragmentMessagesBinding.inflate(inflater);
-
+        FragmentMessagesBinding binding = FragmentMessagesBinding.inflate(inflater);
         ViewModelProvider viewModelProvider = new ViewModelProvider(this);
+
         binding.setViewModel(viewModelProvider.get(MessageFragmentViewModel.class));
         binding.regularState.setViewModel(viewModelProvider.get(MessageRegularViewModel.class));
 

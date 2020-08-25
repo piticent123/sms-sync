@@ -1,6 +1,14 @@
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <ListPreference
+        app:icon="@drawable/ic_cloud_upload_24dp"
+        android:defaultValue="google_drive"
+        android:entries="@array/cloud_backup_provider_entries"
+        android:entryValues="@array/cloud_backup_provider_values"
+        android:key="cloudBackupProvider"
+        android:title="Cloud Backup Provider" />
     <SwitchPreferenceCompat
-        app:key="useGoogleDrive"
-        app:title="Save backup with Google Drive"
-        app:icon="@drawable/ic_cloud_upload_24dp" />
+        android:icon="@drawable/ic_baseline_signal_cellular_4_bar_24"
+        app:key="useMobileData"
+        app:title="Upload Backup Over Data" />
 </PreferenceScreen>
