@@ -2,11 +2,13 @@ package dev.pitlor.smssync.tasks;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.net.ConnectivityManager;
-import android.net.NetworkCapabilities;
 
 import androidx.annotation.NonNull;
+import androidx.preference.PreferenceManager;
+import androidx.work.Constraints;
+import androidx.work.NetworkType;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
@@ -28,6 +30,18 @@ public class SmsSync extends Worker {
         this.context = context;
     }
 
+    public static Constraints getConstraints(Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        boolean useData = preferences.getBoolean("useMobileData", false);
+
+        return new Constraints
+            .Builder()
+            .setRequiresBatteryNotLow(true)
+            .setRequiresStorageNotLow(true)
+            .setRequiredNetworkType(useData ? NetworkType.CONNECTED : NetworkType.UNMETERED)
+            .build();
+    }
+
     @NonNull
     public Result doWork() {
         List<Integer> results = Arrays.asList(
@@ -36,20 +50,6 @@ public class SmsSync extends Worker {
         );
         if (results.stream().anyMatch(r -> r == PackageManager.PERMISSION_DENIED)) {
             return Result.failure();
-        }
-
-        ConnectivityManager connectivityManager =
-                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkCapabilities networkCapabilities =
-                connectivityManager.getNetworkCapabilities(connectivityManager.getActiveNetwork());
-        if (networkCapabilities == null) {
-            return Result.failure();
-        }
-
-        boolean isConnected = networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET);
-        boolean isUsingData = connectivityManager.isActiveNetworkMetered();
-        if (!isConnected || isUsingData) {
-            return Result.retry();
         }
 
         AppDatabase appDatabase = AppDatabase.getInstance(context);

@@ -7,30 +7,22 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.databinding.BindingAdapter;
 import androidx.lifecycle.AndroidViewModel;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
 
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
-import java.util.List;
 
-import dev.pitlor.sms.Message;
-import dev.pitlor.sms.Messages;
-import dev.pitlor.smssync.datasources.AppDatabase;
-import dev.pitlor.smssync.datasources.daos.ContactDao;
-import dev.pitlor.smssync.datasources.daos.MessageDao;
+import dev.pitlor.smssync.tasks.SmsSync;
 
 public class BaseViewModel extends AndroidViewModel {
-    private AppDatabase appDatabase;
-    private MessageDao messageDao;
-    private ContactDao contactDao;
-    private Messages messageUtils;
+    private Application application;
 
     public BaseViewModel(@NonNull Application application) {
         super(application);
-        appDatabase = AppDatabase.getInstance(application);
-        messageDao = appDatabase.messageDao();
-        contactDao = appDatabase.contactDao();
-        messageUtils = new Messages(application);
+        this.application = application;
     }
 
     @BindingAdapter("visibleIf")
@@ -43,12 +35,12 @@ public class BaseViewModel extends AndroidViewModel {
         Picasso.get().load(image).into(imageView);
     }
 
-    public void sync() {
-//        appDatabase.addSync();
-//
-//        // Get contacts
-//
-//        List<Message> messages = messageUtils.readAllAfter(null);
-//        appDatabase.addMessages(messages);
+    public void sync(View view) {
+        WorkRequest workRequest = new OneTimeWorkRequest
+            .Builder(SmsSync.class)
+            .setConstraints(SmsSync.getConstraints(application))
+            .build();
+
+        WorkManager.getInstance(application).enqueue(workRequest);
     }
 }
