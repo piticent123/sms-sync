@@ -15,14 +15,17 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 
+import dev.pitlor.smssync.repositories.AppRepository;
 import dev.pitlor.smssync.tasks.SmsSync;
 
 public class BaseViewModel extends AndroidViewModel {
     private Application application;
+    protected AppRepository appRepository;
 
     public BaseViewModel(@NonNull Application application) {
         super(application);
         this.application = application;
+        appRepository = new AppRepository(application);
     }
 
     @BindingAdapter("visibleIf")

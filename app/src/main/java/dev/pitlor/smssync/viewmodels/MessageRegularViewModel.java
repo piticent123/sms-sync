@@ -12,7 +12,7 @@ import dev.pitlor.smssync.datasources.AppDatabase;
 import dev.pitlor.smssync.datasources.daos.MessageDao;
 import dev.pitlor.smssync.datasources.dto.MessageDTO;
 
-public class MessageRegularViewModel extends AndroidViewModel {
+public class MessageRegularViewModel extends BaseViewModel {
     public LiveData<List<MessageDTO>> messages;
 
     public MessageRegularViewModel(@NonNull Application application) {

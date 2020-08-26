@@ -1,5 +1,11 @@
 package dev.pitlor.smssync.viewmodels;
 
-public class SyncRegularViewModel {
+import android.app.Application;
 
+import androidx.annotation.NonNull;
+
+public class SyncRegularViewModel extends BaseViewModel {
+    public SyncRegularViewModel(@NonNull Application application) {
+        super(application);
+    }
 }

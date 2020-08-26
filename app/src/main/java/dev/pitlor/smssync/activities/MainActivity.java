@@ -12,13 +12,10 @@ import dev.pitlor.smssync.R;
 import dev.pitlor.smssync.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
-    private static MainActivity instance;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        instance = this;
         ActivityMainBinding view = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(view.getRoot());
 
@@ -34,9 +31,5 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = navHostFragment.getNavController();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(view.navView, navController);
-    }
-
-    public static MainActivity getInstance() {
-        return instance;
     }
 }

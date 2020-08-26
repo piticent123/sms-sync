@@ -33,10 +33,6 @@ public abstract class AppDatabase extends RoomDatabase {
     private static volatile AppDatabase instance;
     public static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(4);
 
-    public MessageDao messageDao;
-    public SyncDao syncDao;
-    public ContactDao contactDao;
-
     public abstract MessageDao messageDao();
 
     public abstract SyncDao syncDao();
@@ -53,52 +49,8 @@ public abstract class AppDatabase extends RoomDatabase {
                     .databaseBuilder(context, AppDatabase.class, "sms-sync.db")
                     .addMigrations(migrations)
                     .build();
-            instance.init();
         }
 
         return instance;
-    }
-
-    private void init() {
-        messageDao = messageDao();
-        syncDao = syncDao();
-        contactDao = contactDao();
-    }
-
-    public void addSync() {
-        syncDao.addSync(new Sync(OffsetDateTime.now()));
-    }
-
-    public void addMessages(List<dev.pitlor.sms.Message> messages) {
-        List<Message> messagesAsEntities = messages
-                .stream()
-                .map(Message::from)
-                .collect(Collectors.toList());
-        messageDao.insertAll(messagesAsEntities);
-    }
-
-    public void addAndUpdateContacts(List<dev.pitlor.sms.Contact> contacts) {
-        List<Contact> contactsAsEntities = contacts
-                .stream()
-                .map(Contact::from)
-                .collect(Collectors.toList());
-
-        for (Contact contact : contactsAsEntities) {
-            Contact savedContact = null;
-            for (String phoneNumber : contact.phoneNumbers) {
-                savedContact = contactDao.getByNumber(phoneNumber).getValue();
-
-                if (savedContact != null) {
-                    break;
-                }
-            }
-
-            if (savedContact != null) {
-                contact.id = savedContact.id;
-                contactDao.update(contact);
-            } else {
-                contactDao.insert(contact);
-            }
-        }
     }
 }
