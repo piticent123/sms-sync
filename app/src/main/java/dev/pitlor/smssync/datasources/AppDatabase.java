@@ -8,24 +8,15 @@ import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 import androidx.room.migration.Migration;
 
-import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.stream.Collectors;
 
-import dev.pitlor.smssync.Utils;
 import dev.pitlor.smssync.datasources.daos.ContactDao;
 import dev.pitlor.smssync.datasources.daos.MessageDao;
 import dev.pitlor.smssync.datasources.daos.SyncDao;
 import dev.pitlor.smssync.datasources.entities.Contact;
 import dev.pitlor.smssync.datasources.entities.Message;
 import dev.pitlor.smssync.datasources.entities.Sync;
-
-import static dev.pitlor.smssync.Utils.nonNull;
 
 @Database(entities = {Message.class, Sync.class, Contact.class}, version = 1)
 @TypeConverters({Converters.class})
