@@ -1,22 +1,23 @@
 package dev.pitlor.sms;
 
-import android.content.Context;
-
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import dev.pitlor.sms.repositories.MessageRepository;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import javax.inject.Inject;
 
-@RequiredArgsConstructor
+import dev.pitlor.sms.repositories.MessageRepository;
+
 public class Messages {
-    @NonNull private Context context;
+    private MessageRepository messageRepository;
+
+    @Inject
+    public Messages(MessageRepository messageRepository) {
+        this.messageRepository = messageRepository;
+    }
 
     public List<Message> readAllAfter(OffsetDateTime minimumTime) {
-        MessageRepository messageRepository = new MessageRepository(context);
         List<List<String>> messageIds = messageRepository.getAllIdsAfter(minimumTime);
 
         List<Message> messages = new ArrayList<>();

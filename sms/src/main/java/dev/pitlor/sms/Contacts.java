@@ -1,20 +1,20 @@
 package dev.pitlor.sms;
 
-import android.content.Context;
-
 import java.util.List;
 
-import lombok.AllArgsConstructor;
+import javax.inject.Inject;
 
-@AllArgsConstructor
+import dev.pitlor.sms.repositories.ContactRepository;
+
 public class Contacts {
-    private Context context;
+    private ContactRepository contactRepository;
+
+    @Inject
+    public Contacts(ContactRepository contactRepository) {
+        this.contactRepository = contactRepository;
+    }
 
     public List<Contact> readAll(int limit) {
         return null;
-    }
-
-    public List<Contact> readAll() {
-        return readAll(-1);
     }
 }

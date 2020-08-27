@@ -20,9 +20,10 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import dev.pitlor.sms.models.Mms;
 import dev.pitlor.sms.models.Sms;
-import lombok.AllArgsConstructor;
 
 import static android.provider.Telephony.TextBasedSmsColumns.ADDRESS;
 import static android.provider.Telephony.TextBasedSmsColumns.BODY;
@@ -30,13 +31,17 @@ import static android.provider.Telephony.TextBasedSmsColumns.DATE;
 import static android.provider.Telephony.TextBasedSmsColumns.SUBJECT;
 import static android.provider.Telephony.TextBasedSmsColumns.THREAD_ID;
 
-@AllArgsConstructor
 public class MessageRepository {
     private static final Uri CONVERSATIONS_URI = Uri.parse("content://mms-sms/conversations/");
     public static final int SMS = 1;
     public static final int MMS = 2;
 
     private Context context;
+
+    @Inject
+    public MessageRepository(Context context) {
+        this.context = context;
+    }
 
     public List<List<String>> getAllIdsAfter(OffsetDateTime minimumTime) {
         ContentResolver contentResolver = context.getContentResolver();

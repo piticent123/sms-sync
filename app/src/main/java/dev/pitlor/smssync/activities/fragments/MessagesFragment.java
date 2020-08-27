@@ -9,10 +9,12 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import dagger.hilt.android.AndroidEntryPoint;
 import dev.pitlor.smssync.databinding.FragmentMessagesBinding;
 import dev.pitlor.smssync.viewmodels.MessageFragmentViewModel;
 import dev.pitlor.smssync.viewmodels.MessageRegularViewModel;
 
+@AndroidEntryPoint
 public class MessagesFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         FragmentMessagesBinding binding = FragmentMessagesBinding.inflate(inflater);
