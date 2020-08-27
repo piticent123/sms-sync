@@ -22,17 +22,18 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
     private List<Message> messages;
     private LayoutInflater layoutInflater;
 
-    public MessagesAdapter(Fragment fragment, Context context, List<Message> messages) {
+    public MessagesAdapter(Fragment fragment, List<Message> messages) {
         this.fragment = fragment;
         this.messages = messages;
-        layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        layoutInflater = (LayoutInflater) fragment.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @NonNull
     @Override
     public MessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        MessagesListItemBinding view = DataBindingUtil.inflate(layoutInflater, R.layout.messages_list_item, parent, false);
-        return new MessageViewHolder(fragment, view);
+        MessagesListItemBinding view = DataBindingUtil
+                .inflate(layoutInflater, R.layout.messages_list_item, parent, false);
+        return new MessageViewHolder(view);
     }
 
     @Override
@@ -46,10 +47,10 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
         return messages.size();
     }
 
-    static class MessageViewHolder extends RecyclerView.ViewHolder {
+    class MessageViewHolder extends RecyclerView.ViewHolder {
         private MessagesListItemBinding itemView;
 
-        public MessageViewHolder(Fragment fragment, @NonNull MessagesListItemBinding itemView) {
+        public MessageViewHolder(@NonNull MessagesListItemBinding itemView) {
             super(itemView.getRoot());
             this.itemView = itemView;
             itemView.setViewModel(new ViewModelProvider(fragment).get(ConversationsListItemViewModel.class));
