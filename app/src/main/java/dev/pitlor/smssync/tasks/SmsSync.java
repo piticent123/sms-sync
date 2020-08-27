@@ -7,16 +7,20 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 
 import androidx.annotation.NonNull;
+import androidx.hilt.Assisted;
+import androidx.hilt.work.WorkerInject;
 import androidx.preference.PreferenceManager;
 import androidx.work.Constraints;
-import androidx.work.NetworkType;
 import androidx.work.Data;
+import androidx.work.NetworkType;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 import java.util.Arrays;
 import java.util.List;
 
+import dev.pitlor.sms.Contacts;
+import dev.pitlor.sms.Messages;
 import dev.pitlor.smssync.R;
 import dev.pitlor.smssync.repositories.AppRepository;
 
@@ -24,10 +28,23 @@ public class SmsSync extends Worker {
     private static final String PROGRESS = "PROGRESS";
 
     private Context context;
+    private AppRepository appRepository;
+    private Messages messageRepository;
+    private Contacts contactRepository;
 
-    public SmsSync(@NonNull Context context, @NonNull WorkerParameters workerParams) {
+    @WorkerInject
+    public SmsSync(
+        @Assisted @NonNull Context context,
+        @Assisted @NonNull WorkerParameters workerParams,
+        AppRepository appRepository,
+        Messages messageRepository,
+        Contacts contactRepository
+    ) {
         super(context, workerParams);
         this.context = context;
+        this.appRepository = appRepository;
+        this.messageRepository = messageRepository;
+        this.contactRepository = contactRepository;
     }
 
     public static Constraints getConstraints(Context context) {
@@ -48,11 +65,8 @@ public class SmsSync extends Worker {
 
     @NonNull
     public Result doWork() {
-        setProgress("Getting an instance of the database");
-        AppRepository appRepository = new AppRepository(context);
-
         setProgress("Recording time of the sync");
-        appRepository.addSync();
+//        appRepository.addSync();
 
         setProgress("Checking permissions...");
         List<Integer> results = Arrays.asList(
@@ -65,7 +79,6 @@ public class SmsSync extends Worker {
         }
         setProgress("Checks passed!");
 
-//        Messages messageUtils = new Messages(context);
         setProgress("Finding last saved text");
 //        OffsetDateTime timeOfLastSavedText = appDatabase.messageDao.timeOfLastSavedText().getValue();
         setProgress("Reading all newer texts from the phone");
@@ -73,7 +86,6 @@ public class SmsSync extends Worker {
 //        appDatabase.addMessages(messages);
 
         setProgress("Reading contacts");
-//        Contacts contactUtils = new Contacts(context);
 //        List<Contact> contacts = contactUtils.readAll();
         setProgress("Adding new contacts and updating changed contacts");
 //        appDatabase.addAndUpdateContacts(contacts);

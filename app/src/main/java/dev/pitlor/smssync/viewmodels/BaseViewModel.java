@@ -6,6 +6,7 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.BindingAdapter;
+import androidx.hilt.lifecycle.ViewModelInject;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
@@ -22,6 +23,7 @@ public class BaseViewModel extends AndroidViewModel {
     private Application application;
     protected AppRepository appRepository;
 
+    @ViewModelInject
     public BaseViewModel(@NonNull Application application) {
         super(application);
         this.application = application;
