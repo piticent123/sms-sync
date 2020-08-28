@@ -24,12 +24,12 @@ public class Messages {
         messages.addAll(messageIds.get(MessageRepository.SMS)
             .stream()
             .map(messageRepository::getSmsById)
-            .map(Message::from)
+            .map(Message.Companion::from)
             .collect(Collectors.toList()));
         messages.addAll(messageIds.get(MessageRepository.MMS)
             .stream()
             .map(messageRepository::getMmsById)
-            .map(Message::from)
+            .map(Message.Companion::from)
             .collect(Collectors.toList()));
 
         return messages;
