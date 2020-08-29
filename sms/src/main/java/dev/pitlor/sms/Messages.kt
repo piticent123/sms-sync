@@ -1,37 +1,21 @@
-package dev.pitlor.sms;
+package dev.pitlor.sms
 
-import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import dev.pitlor.sms.repositories.MessageRepository
+import java.time.OffsetDateTime
+import javax.inject.Inject
 
-import javax.inject.Inject;
-
-import dev.pitlor.sms.repositories.MessageRepository;
-
-public class Messages {
-    private MessageRepository messageRepository;
-
-    @Inject
-    public Messages(MessageRepository messageRepository) {
-        this.messageRepository = messageRepository;
-    }
-
-    public List<Message> readAllAfter(OffsetDateTime minimumTime) {
-        List<List<String>> messageIds = messageRepository.getAllIdsAfter(minimumTime);
-
-        List<Message> messages = new ArrayList<>();
-        messages.addAll(messageIds.get(MessageRepository.SMS)
-            .stream()
-            .map(messageRepository::getSmsById)
-            .map(Message.Companion::from)
-            .collect(Collectors.toList()));
-        messages.addAll(messageIds.get(MessageRepository.MMS)
-            .stream()
-            .map(messageRepository::getMmsById)
-            .map(Message.Companion::from)
-            .collect(Collectors.toList()));
-
-        return messages;
+class Messages @Inject constructor(private val messageRepository: MessageRepository) {
+    fun readAllAfter(minimumTime: OffsetDateTime?): List<Message> {
+        val messageIds = messageRepository.getAllIdsAfter(minimumTime)
+        return buildList(messageIds.mmsIds.size + messageIds.smsIds.size) {
+            addAll(messageIds.smsIds
+                .map { messageRepository.getSmsById(it) }
+                .map { Message.from(it) }
+            )
+            addAll(messageIds.mmsIds
+                .map { messageRepository.getMmsById(it) }
+                .map { Message.from(it) }
+            )
+        }
     }
 }

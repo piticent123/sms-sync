@@ -16,7 +16,6 @@ class MessageUnitTests {
         return OffsetDateTime.of(year, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC)
     }
 
-    @ExperimentalStdlibApi
     @Test
     fun readAll() {
         val mockMessageRepository = Mockito.mock(MessageRepository::class.java)

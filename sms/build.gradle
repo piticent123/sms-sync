@@ -28,18 +28,13 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    kotlinOptions {
+        freeCompilerArgs += "-Xopt-in=kotlin.ExperimentalStdlibApi"
+    }
+
     testOptions {
         unitTests.returnDefaultValues = true
     }
-
-//    sourceSets {
-//        all {
-//            languageSettings {
-//                useExperimentalAnnotation 'kotlin.ExperimentalStdlibApi'
-//            }
-//        }
-//    }
-
 }
 
 dependencies {

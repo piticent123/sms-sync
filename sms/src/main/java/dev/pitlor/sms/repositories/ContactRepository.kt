@@ -1,14 +1,6 @@
-package dev.pitlor.sms.repositories;
+package dev.pitlor.sms.repositories
 
-import android.content.Context;
+import android.content.Context
+import javax.inject.Inject
 
-import javax.inject.Inject;
-
-public class ContactRepository {
-    private Context context;
-
-    @Inject
-    public ContactRepository(Context context) {
-        this.context = context;
-    }
-}
+class ContactRepository @Inject constructor(private val context: Context)

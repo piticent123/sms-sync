@@ -1,0 +1,67 @@
+package dev.pitlor.sms
+
+import android.content.ContentResolver
+import android.database.Cursor
+import android.net.Uri
+import java.io.IOException
+import java.io.InputStream
+
+fun Cursor.getString(column: String): String {
+    return this.getString(this.getColumnIndex(column))
+}
+
+fun Cursor.getLong(column: String): Long {
+    return this.getLong(this.getColumnIndex(column))
+}
+
+fun ContentResolver.queryLoop(
+    uri: Uri,
+    projection: Array<String>? = null,
+    selection: String? = null,
+    selectionArgs: Array<String>? = null,
+    sortOrder: String? = null,
+    useData: Cursor.() -> Unit
+) {
+    val cursor = query(uri, projection, selection, selectionArgs, sortOrder)
+    if (cursor != null && cursor.moveToFirst()) {
+        do {
+            cursor.useData()
+        } while (cursor.moveToNext())
+        cursor.close()
+    }
+}
+
+fun ContentResolver.queryOnce(
+    uri: Uri,
+    projection: Array<String>? = null,
+    selection: String? = null,
+    selectionArgs: Array<String>? = null,
+    sortOrder: String? = null,
+    useData: Cursor.() -> Unit
+) {
+    val cursor = query(uri, projection, selection, selectionArgs, sortOrder)
+    if (cursor != null && cursor.moveToFirst()) {
+        cursor.useData()
+        cursor.close()
+    }
+}
+
+fun ContentResolver.useInputStream(uri: Uri, useData: InputStream.() -> Unit) {
+    var inputStream: InputStream? = null
+    try {
+        inputStream = openInputStream(uri)
+        inputStream?.useData()
+    } catch (e: IOException) {
+        // Do nothing
+    } finally {
+        try {
+            inputStream?.close()
+        } catch (e: IOException) {
+            // Do nothing
+        }
+    }
+}
+
+fun noop() {
+    // do nothing
+}

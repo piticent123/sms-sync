@@ -1,20 +1,10 @@
-package dev.pitlor.sms;
+package dev.pitlor.sms
 
-import java.util.List;
+import dev.pitlor.sms.repositories.ContactRepository
+import javax.inject.Inject
 
-import javax.inject.Inject;
-
-import dev.pitlor.sms.repositories.ContactRepository;
-
-public class Contacts {
-    private ContactRepository contactRepository;
-
-    @Inject
-    public Contacts(ContactRepository contactRepository) {
-        this.contactRepository = contactRepository;
-    }
-
-    public List<Contact> readAll(int limit) {
-        return null;
+class Contacts @Inject constructor(private val contactRepository: ContactRepository) {
+    fun readAll(limit: Int): List<Contact> {
+        return listOf()
     }
 }

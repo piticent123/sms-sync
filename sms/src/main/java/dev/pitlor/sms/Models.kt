@@ -1,9 +1,30 @@
 package dev.pitlor.sms
 
-import dev.pitlor.sms.models.Mms
-import dev.pitlor.sms.models.Sms
 import java.io.File
 import java.time.OffsetDateTime
+
+data class Mms (
+    var address: String,
+    var dateReceived: OffsetDateTime,
+    var threadId: Long,
+    var picture: File? = null,
+    var subject: String? = null,
+    var body: String? = null
+)
+
+data class Sms (
+    var address: String,
+    var dateReceived: OffsetDateTime,
+    var threadId: Long,
+    var body: String,
+    var subject: String? = null
+)
+
+data class Contact (
+    val name: String,
+    val phoneNumber: List<String>,
+    val picture: File? = null
+)
 
 data class Message (
     val date: OffsetDateTime,
@@ -14,9 +35,7 @@ data class Message (
     val image: File? = null,
 ) {
     companion object {
-        fun from(mms: Mms?): Message {
-            if (mms == null) return Message(date = OffsetDateTime.MIN, sender = "", threadId = 0)
-
+        fun from(mms: Mms): Message {
             return Message(
                 sender=mms.address,
                 date=mms.dateReceived,
@@ -27,9 +46,7 @@ data class Message (
             )
         }
 
-        fun from(sms: Sms?): Message {
-            if (sms == null) return Message(date = OffsetDateTime.MIN, sender = "", threadId = 0)
-
+        fun from(sms: Sms): Message {
             return Message(
                 sender=sms.address,
                 body=sms.body,
@@ -40,3 +57,5 @@ data class Message (
         }
     }
 }
+
+data class MessagesDTO (val smsIds: List<String>, val mmsIds: List<String>)
