@@ -1,37 +1,30 @@
-package dev.pitlor.smssync.datasources.daos;
+package dev.pitlor.smssync.datasources.daos
 
-import androidx.lifecycle.LiveData;
-import androidx.room.Dao;
-import androidx.room.Delete;
-import androidx.room.Insert;
-import androidx.room.Query;
-import androidx.room.Transaction;
-
-import java.time.OffsetDateTime;
-import java.util.List;
-
-import dev.pitlor.smssync.datasources.dto.MessageDTO;
-import dev.pitlor.smssync.datasources.entities.Message;
+import androidx.lifecycle.LiveData
+import androidx.room.*
+import dev.pitlor.smssync.datasources.Message
+import dev.pitlor.smssync.datasources.MessageDTO
+import java.time.OffsetDateTime
 
 @Dao
-public interface MessageDao {
-    @Transaction
-    @Query("SELECT * FROM message")
-    LiveData<List<MessageDTO>> getAll();
+interface MessageDao {
+    @get:Query("SELECT * FROM message")
+    @get:Transaction
+    val all: LiveData<List<MessageDTO?>?>?
 
     @Transaction
     @Query("SELECT * FROM message WHERE id IN (:messageIds)")
-    LiveData<List<MessageDTO>> loadAllByIds(int[] messageIds);
+    fun loadAllByIds(messageIds: IntArray?): LiveData<List<MessageDTO?>?>?
 
     @Query("SELECT SUM(id) FROM message GROUP BY id")
-    LiveData<Integer> size();
+    fun size(): LiveData<Int?>?
 
     @Query("SELECT date FROM message ORDER BY date DESC LIMIT 1")
-    LiveData<OffsetDateTime> timeOfLastSavedText();
+    fun timeOfLastSavedText(): LiveData<OffsetDateTime?>?
 
     @Insert
-    void insertAll(List<Message> messages);
+    fun insertAll(messages: List<Message?>?)
 
     @Delete
-    void delete(Message message);
+    fun delete(message: Message?)
 }

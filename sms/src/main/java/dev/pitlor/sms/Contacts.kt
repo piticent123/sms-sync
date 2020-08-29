@@ -7,4 +7,8 @@ class Contacts @Inject constructor(private val contactRepository: ContactReposit
     fun readAll(limit: Int): List<Contact> {
         return listOf()
     }
+
+    fun readAll(): List<Contact> {
+        return readAll(-1)
+    }
 }

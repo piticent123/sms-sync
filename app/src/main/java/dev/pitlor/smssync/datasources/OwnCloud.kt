@@ -1,17 +1,16 @@
-package dev.pitlor.smssync.datasources;
+package dev.pitlor.smssync.datasources
 
-import com.thegrizzlylabs.sardineandroid.Sardine;
-import com.thegrizzlylabs.sardineandroid.impl.OkHttpSardine;
+import com.thegrizzlylabs.sardineandroid.Sardine
+import com.thegrizzlylabs.sardineandroid.impl.OkHttpSardine
 
-public class OwnCloud {
-    private static Sardine instance;
-
-    public static Sardine getInstance() {
-        if (instance == null) {
-            instance = new OkHttpSardine();
-            instance.setCredentials("admin", "admin");
+object OwnCloud {
+    var instance: Sardine? = null
+        get() {
+            if (field == null) {
+                field = OkHttpSardine()
+                (field as OkHttpSardine).setCredentials("admin", "admin")
+            }
+            return field
         }
-
-        return instance;
-    }
+        private set
 }

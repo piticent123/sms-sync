@@ -4,21 +4,37 @@ import java.io.File
 import java.time.OffsetDateTime
 
 data class Mms (
-    var address: String,
-    var dateReceived: OffsetDateTime,
-    var threadId: Long,
+    var address: String = "",
+    var dateReceived: OffsetDateTime = OffsetDateTime.MIN,
+    var threadId: Long = -1,
     var picture: File? = null,
     var subject: String? = null,
     var body: String? = null
-)
+) {
+    companion object {
+        fun Builder(build: Mms.() -> Unit): Mms {
+            val mms = Mms()
+            mms.build()
+            return mms
+        }
+    }
+}
 
 data class Sms (
-    var address: String,
-    var dateReceived: OffsetDateTime,
-    var threadId: Long,
-    var body: String,
+    var address: String = "",
+    var dateReceived: OffsetDateTime = OffsetDateTime.MIN,
+    var threadId: Long = -1,
+    var body: String = "",
     var subject: String? = null
-)
+) {
+    companion object {
+        fun Builder(build: Sms.() -> Unit): Sms {
+            val sms = Sms()
+            sms.build()
+            return sms
+        }
+    }
+}
 
 data class Contact (
     val name: String,

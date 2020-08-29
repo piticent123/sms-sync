@@ -1,20 +1,9 @@
-package dev.pitlor.smssync.viewmodels;
+package dev.pitlor.smssync.viewmodels
 
-import android.app.Application;
+import android.app.Application
+import androidx.hilt.lifecycle.ViewModelInject
 
-import androidx.annotation.NonNull;
-import androidx.hilt.lifecycle.ViewModelInject;
-import androidx.lifecycle.LiveData;
-
-public class MessageFragmentViewModel extends BaseViewModel {
-    public LiveData<Integer> messagesCount = appRepository.getMessageCount();
-
-    @ViewModelInject
-    public MessageFragmentViewModel(@NonNull Application application) {
-        super(application);
-    }
-
-    public boolean isLoading() {
-        return messagesCount == null;
-    }
+class MessageFragmentViewModel @ViewModelInject constructor(application: Application) : BaseViewModel(application) {
+    val messagesCount = appRepository.messageCount
+    val isLoading = messagesCount.value == null
 }

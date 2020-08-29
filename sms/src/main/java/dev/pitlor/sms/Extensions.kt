@@ -5,6 +5,13 @@ import android.database.Cursor
 import android.net.Uri
 import java.io.IOException
 import java.io.InputStream
+import java.time.Instant
+import java.time.OffsetDateTime
+import java.time.ZoneId
+
+fun longToDate(date: Long): OffsetDateTime {
+    return OffsetDateTime.ofInstant(Instant.ofEpochMilli(date), ZoneId.systemDefault())
+}
 
 fun Cursor.getString(column: String): String {
     return this.getString(this.getColumnIndex(column))

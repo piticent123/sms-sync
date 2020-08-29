@@ -1,19 +1,17 @@
-package dev.pitlor.smssync.datasources.daos;
+package dev.pitlor.smssync.datasources.daos
 
-import androidx.lifecycle.LiveData;
-import androidx.room.Dao;
-import androidx.room.Insert;
-import androidx.room.Query;
-
-import java.time.OffsetDateTime;
-
-import dev.pitlor.smssync.datasources.entities.Sync;
+import androidx.lifecycle.LiveData
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.Query
+import dev.pitlor.smssync.datasources.Sync
+import java.time.OffsetDateTime
 
 @Dao
-public interface SyncDao {
-    @Query("SELECT date FROM sync ORDER BY date LIMIT 1")
-    LiveData<OffsetDateTime> getLastSync();
+interface SyncDao {
+    @get:Query("SELECT date FROM sync ORDER BY date LIMIT 1")
+    val lastSync: LiveData<OffsetDateTime?>?
 
     @Insert
-    void addSync(Sync date);
+    fun addSync(date: Sync?)
 }

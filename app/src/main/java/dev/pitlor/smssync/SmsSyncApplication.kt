@@ -1,25 +1,20 @@
-package dev.pitlor.smssync;
+package dev.pitlor.smssync
 
-import android.app.Application;
-
-import androidx.annotation.NonNull;
-import androidx.hilt.work.HiltWorkerFactory;
-import androidx.work.Configuration;
-
-import javax.inject.Inject;
-
-import dagger.hilt.android.HiltAndroidApp;
+import android.app.Application
+import androidx.hilt.work.HiltWorkerFactory
+import androidx.work.Configuration
+import dagger.hilt.android.HiltAndroidApp
+import javax.inject.Inject
 
 @HiltAndroidApp
-public class SmsSyncApplication extends Application implements Configuration.Provider {
+class SmsSyncApplication : Application(), Configuration.Provider {
+    @JvmField
     @Inject
-    HiltWorkerFactory workerFactory;
+    var workerFactory: HiltWorkerFactory? = null
 
-    @NonNull
-    @Override
-    public Configuration getWorkManagerConfiguration() {
-        return new Configuration.Builder()
-            .setWorkerFactory(workerFactory)
-            .build();
+    override fun getWorkManagerConfiguration(): Configuration {
+        return Configuration.Builder()
+            .setWorkerFactory(workerFactory!!)
+            .build()
     }
 }

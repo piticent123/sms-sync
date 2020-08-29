@@ -1,26 +1,23 @@
-package dev.pitlor.smssync.datasources.daos;
+package dev.pitlor.smssync.datasources.daos
 
-import androidx.lifecycle.LiveData;
-import androidx.room.Dao;
-import androidx.room.Insert;
-import androidx.room.Query;
-import androidx.room.Update;
-
-import java.util.List;
-
-import dev.pitlor.smssync.datasources.entities.Contact;
+import androidx.lifecycle.LiveData
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.Query
+import androidx.room.Update
+import dev.pitlor.smssync.datasources.Contact
 
 @Dao
-public interface ContactDao {
-    @Query("SELECT * FROM contact")
-    LiveData<List<Contact>> getAll();
+interface ContactDao {
+    @get:Query("SELECT * FROM contact")
+    val all: LiveData<List<Contact?>?>?
 
     @Query("SELECT * FROM contact WHERE phoneNumbers LIKE :number")
-    LiveData<Contact> getByNumber(String number);
+    fun getByNumber(number: String?): LiveData<Contact?>?
 
     @Insert
-    void insert(Contact contact);
+    fun insert(contact: Contact?)
 
     @Update
-    void update(Contact contact);
+    fun update(contact: Contact?)
 }

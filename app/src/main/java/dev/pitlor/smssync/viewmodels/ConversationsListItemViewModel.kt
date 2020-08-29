@@ -1,18 +1,9 @@
-package dev.pitlor.smssync.viewmodels;
+package dev.pitlor.smssync.viewmodels
 
-import android.app.Application;
+import android.app.Application
+import androidx.hilt.lifecycle.ViewModelInject
+import dev.pitlor.sms.Message
 
-import androidx.annotation.NonNull;
-import androidx.hilt.lifecycle.ViewModelInject;
-
-import dev.pitlor.sms.Message;
-import lombok.Setter;
-
-public class ConversationsListItemViewModel extends BaseViewModel {
-    @Setter public Message message;
-
-    @ViewModelInject
-    public ConversationsListItemViewModel(@NonNull Application application) {
-        super(application);
-    }
+class ConversationsListItemViewModel @ViewModelInject constructor(application: Application) : BaseViewModel(application) {
+    var message: Message? = null
 }

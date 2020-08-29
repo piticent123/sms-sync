@@ -1,24 +1,20 @@
-package dev.pitlor.smssync.repositories;
+package dev.pitlor.smssync.repositories
 
-import android.content.Context;
+import android.content.Context
+import dev.pitlor.smssync.datasources.AppDatabase
+import dev.pitlor.smssync.datasources.daos.ContactDao
+import dev.pitlor.smssync.datasources.daos.MessageDao
+import dev.pitlor.smssync.datasources.daos.SyncDao
 
-import java.util.concurrent.ExecutorService;
+open class BaseRepository(context: Context) {
+    var syncDao: SyncDao
+    var messageDao: MessageDao
+    var contactDao: ContactDao
 
-import dev.pitlor.smssync.datasources.AppDatabase;
-import dev.pitlor.smssync.datasources.daos.ContactDao;
-import dev.pitlor.smssync.datasources.daos.MessageDao;
-import dev.pitlor.smssync.datasources.daos.SyncDao;
-
-public class BaseRepository {
-    SyncDao syncDao;
-    MessageDao messageDao;
-    ContactDao contactDao;
-    static final ExecutorService databaseWriteExecutor = AppDatabase.databaseWriteExecutor;
-
-    public BaseRepository(Context context) {
-        AppDatabase appDatabase = AppDatabase.getInstance(context);
-        syncDao = appDatabase.syncDao();
-        messageDao = appDatabase.messageDao();
-        contactDao = appDatabase.contactDao();
+    init {
+        val appDatabase = AppDatabase.getInstance(context)
+        syncDao = appDatabase.syncDao()
+        messageDao = appDatabase.messageDao()
+        contactDao = appDatabase.contactDao()
     }
 }

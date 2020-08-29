@@ -1,16 +1,13 @@
-package dev.pitlor.smssync.activities.fragments;
+package dev.pitlor.smssync.activities.fragments
 
-import android.os.Bundle;
-
-import androidx.preference.PreferenceFragmentCompat;
-
-import dagger.hilt.android.AndroidEntryPoint;
-import dev.pitlor.smssync.R;
+import android.os.Bundle
+import androidx.preference.PreferenceFragmentCompat
+import dagger.hilt.android.AndroidEntryPoint
+import dev.pitlor.smssync.R
 
 @AndroidEntryPoint
-public class SettingsFragment extends PreferenceFragmentCompat {
-    @Override
-    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-        setPreferencesFromResource(R.xml.settings, rootKey);
+class SettingsFragment : PreferenceFragmentCompat() {
+    override fun onCreatePreferences(savedInstanceState: Bundle, rootKey: String) {
+        setPreferencesFromResource(R.xml.settings, rootKey)
     }
 }

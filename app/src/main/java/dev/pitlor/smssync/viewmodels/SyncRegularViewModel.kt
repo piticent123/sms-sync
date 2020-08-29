@@ -1,13 +1,6 @@
-package dev.pitlor.smssync.viewmodels;
+package dev.pitlor.smssync.viewmodels
 
-import android.app.Application;
+import android.app.Application
+import androidx.hilt.lifecycle.ViewModelInject
 
-import androidx.annotation.NonNull;
-import androidx.hilt.lifecycle.ViewModelInject;
-
-public class SyncRegularViewModel extends BaseViewModel {
-    @ViewModelInject
-    public SyncRegularViewModel(@NonNull Application application) {
-        super(application);
-    }
-}
+class SyncRegularViewModel @ViewModelInject constructor(application: Application) : BaseViewModel(application)

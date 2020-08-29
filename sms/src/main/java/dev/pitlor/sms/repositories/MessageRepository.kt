@@ -5,9 +5,11 @@ import android.net.Uri
 import android.provider.Telephony
 import android.provider.Telephony.TextBasedSmsColumns.*
 import dev.pitlor.sms.*
-import java.io.*
+import java.io.BufferedReader
+import java.io.File
+import java.io.FileOutputStream
+import java.io.InputStreamReader
 import java.nio.charset.StandardCharsets
-import java.text.MessageFormat
 import java.time.Instant
 import java.time.OffsetDateTime
 import java.time.ZoneId
@@ -22,10 +24,9 @@ class MessageRepository @Inject constructor(private val context: Context) {
         val mmsIds = ArrayList<String>()
 
         contentResolver.queryLoop(CONVERSATIONS_URI, projection = arrayOf("_id", "ct_t")) {
-            if (getString("ct_t") == "application/vnd.wap.multipart.related") {
-                mmsIds.add(getString("_id"))
-            } else {
-                smsIds.add(getString("_id"))
+            when (getString("ct_t")) {
+                "application/vnd.wap.multipart.related" -> mmsIds.add(getString("_id"))
+                else -> smsIds.add(getString("_id"))
             }
         }
 
@@ -33,82 +34,67 @@ class MessageRepository @Inject constructor(private val context: Context) {
     }
 
     fun getSmsById(id: String): Sms {
-        var address = ""
-        var body = ""
-        var subject = ""
-        var dateReceived = OffsetDateTime.MIN
-        var threadId: Long = 0
-        contentResolver.queryOnce(
-            Telephony.Sms.CONTENT_URI,
-            arrayOf(THREAD_ID, ADDRESS, BODY, DATE, SUBJECT),
-            Telephony.Sms._ID + " = ?",
-            arrayOf(id),
-            null
-        ) {
-            address = getString(ADDRESS)
-            body = getString(BODY)
-            dateReceived = OffsetDateTime.ofInstant(
-                Instant.ofEpochMilli(getLong(DATE)),
-                ZoneId.systemDefault()
-            )
-            threadId = getLong(THREAD_ID)
-            subject = getString(SUBJECT)
+        return Sms.Builder {
+            contentResolver.queryOnce(
+                Telephony.Sms.CONTENT_URI,
+                projection = arrayOf(THREAD_ID, ADDRESS, BODY, DATE, SUBJECT),
+                selection = "${Telephony.Sms._ID} = ?",
+                selectionArgs = arrayOf(id)
+            ) {
+                address = getString(ADDRESS)
+                body = getString(BODY)
+                dateReceived = longToDate(getLong(DATE))
+                threadId = getLong(THREAD_ID)
+                subject = getString(SUBJECT)
+            }
         }
-
-        return Sms(address, dateReceived!!, threadId, body, subject)
     }
 
     fun getMmsById(id: String): Mms {
-        // Metadata
-        var dateReceived = OffsetDateTime.MIN
-        var subject: String? = ""
-        var threadId: Long = 0
-        contentResolver.queryOnce(
-            Telephony.Mms.CONTENT_URI,
-            projection = arrayOf(Telephony.Mms.DATE, Telephony.Mms.SUBJECT, Telephony.Mms.THREAD_ID),
-            selection = "_id = ?",
-            selectionArgs = arrayOf(id)
-        ) {
-            subject = getString(Telephony.Mms.SUBJECT)
-            dateReceived = OffsetDateTime.ofInstant(
-                Instant.ofEpochSecond(getLong(Telephony.Mms.DATE)),
-                ZoneId.systemDefault()
-            )
-            threadId = getLong(Telephony.Mms.THREAD_ID)
-        }
+        return Mms.Builder {
+            // Metadata
+            contentResolver.queryOnce(
+                Telephony.Mms.CONTENT_URI,
+                projection = arrayOf(Telephony.Mms.DATE, Telephony.Mms.SUBJECT, Telephony.Mms.THREAD_ID),
+                selection = "${Telephony.Mms._ID} = ?",
+                selectionArgs = arrayOf(id)
+            ) {
+                subject = getString(Telephony.Mms.SUBJECT)
+                dateReceived = OffsetDateTime.ofInstant(
+                    Instant.ofEpochSecond(getLong(Telephony.Mms.DATE)),
+                    ZoneId.systemDefault()
+                )
+                threadId = getLong(Telephony.Mms.THREAD_ID)
+            }
 
-        // Text/Picture
-        val bodyBuilder = StringBuilder()
-        var picture: File? = null
-        contentResolver.queryLoop(
-            Telephony.Mms.Part.CONTENT_URI,
-            selection = Telephony.Mms.Part.MSG_ID + " = ?",
-            selectionArgs = arrayOf(id),
-        ) {
-            when (getString(Telephony.Mms.Part.CONTENT_TYPE)) {
-                "text/plain" -> bodyBuilder.append(getText(getString(Telephony.Mms.Part._ID)))
-                "image/jpeg",
-                "image/bmp",
-                "image/gif",
-                "image/jpg",
-                "image/png" -> picture = getImage(getString(Telephony.Mms._ID), id)
+            // Text/Picture
+            contentResolver.queryLoop(
+                Telephony.Mms.Part.CONTENT_URI,
+                selection = "${Telephony.Mms.Part.MSG_ID} = ?",
+                selectionArgs = arrayOf(id),
+            ) {
+                when (getString(Telephony.Mms.Part.CONTENT_TYPE)) {
+                    "text/plain" -> body += getText(getString(Telephony.Mms.Part._ID))
+                    "image/jpeg",
+                    "image/bmp",
+                    "image/gif",
+                    "image/jpg",
+                    "image/png" -> picture = getImage(getString(Telephony.Mms._ID), id)
+                }
+            }
+
+            // Sender
+            contentResolver.queryLoop(
+                Uri.parse("content://mms/${id}/addr"),
+                selection = "${Telephony.Mms.Addr.MSG_ID} = ?",
+                selectionArgs = arrayOf(id),
+            ) {
+                when (val retrievedAddress = getString(Telephony.Mms.Addr.ADDRESS)) {
+                    "" -> noop()
+                    else -> address = retrievedAddress
+                }
             }
         }
-
-        // Sender
-        var address: String? = ""
-        contentResolver.queryLoop(
-            Uri.parse(MessageFormat.format("content://mms/{0}/addr", id)),
-            selection = Telephony.Mms.Addr.MSG_ID + " = ?",
-            selectionArgs = arrayOf(id),
-        ) {
-            when (val retrievedAddress = getString(Telephony.Mms.Addr.ADDRESS)) {
-                "" -> noop()
-                else -> address = retrievedAddress
-            }
-        }
-
-        return Mms(address!!, dateReceived!!, threadId, picture, subject, bodyBuilder.toString())
     }
 
     private fun getText(id: String): String {

@@ -1,51 +1,38 @@
-package dev.pitlor.smssync.viewmodels;
+package dev.pitlor.smssync.viewmodels
 
-import android.app.Application;
-import android.view.View;
-import android.widget.ImageView;
+import android.app.Application
+import android.view.View
+import android.widget.ImageView
+import androidx.databinding.BindingAdapter
+import androidx.hilt.lifecycle.ViewModelInject
+import androidx.lifecycle.AndroidViewModel
+import androidx.work.OneTimeWorkRequest
+import androidx.work.WorkManager
+import androidx.work.WorkRequest
+import com.squareup.picasso.Picasso
+import dev.pitlor.smssync.repositories.AppRepository
+import dev.pitlor.smssync.tasks.SmsSync
+import java.io.File
 
-import androidx.annotation.NonNull;
-import androidx.databinding.BindingAdapter;
-import androidx.hilt.lifecycle.ViewModelInject;
-import androidx.lifecycle.AndroidViewModel;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
-import androidx.work.WorkRequest;
+open class BaseViewModel @ViewModelInject constructor(private val _application: Application) : AndroidViewModel(_application) {
+    val appRepository = AppRepository(_application)
 
-import com.squareup.picasso.Picasso;
-
-import java.io.File;
-
-import dev.pitlor.smssync.repositories.AppRepository;
-import dev.pitlor.smssync.tasks.SmsSync;
-
-public class BaseViewModel extends AndroidViewModel {
-    private Application application;
-    protected AppRepository appRepository;
-
-    @ViewModelInject
-    public BaseViewModel(@NonNull Application application) {
-        super(application);
-        this.application = application;
-        appRepository = new AppRepository(application);
+    fun sync(@Suppress("UNUSED_PARAMETER") view: View) {
+        val workRequest: WorkRequest = OneTimeWorkRequest.Builder(SmsSync::class.java)
+            .setConstraints(SmsSync.getConstraints(_application))
+            .build()
+        WorkManager.getInstance(_application).enqueue(workRequest)
     }
 
-    @BindingAdapter("visibleIf")
-    public static void visibleIf(View view, Boolean visible) {
-        view.setVisibility(visible ? View.VISIBLE : View.GONE);
-    }
+    companion object {
+        @BindingAdapter("visibleIf")
+        fun visibleIf(view: View, visible: Boolean) {
+            view.visibility = if (visible) View.VISIBLE else View.GONE
+        }
 
-    @BindingAdapter("imageUrl")
-    public void setImage(ImageView imageView, File image) {
-        Picasso.get().load(image).into(imageView);
-    }
-
-    public void sync(View view) {
-        WorkRequest workRequest = new OneTimeWorkRequest
-            .Builder(SmsSync.class)
-            .setConstraints(SmsSync.getConstraints(application))
-            .build();
-
-        WorkManager.getInstance(application).enqueue(workRequest);
+        @BindingAdapter("imageUrl")
+        fun imageUrl(imageView: ImageView, image: File) {
+            Picasso.get().load(image).into(imageView)
+        }
     }
 }
