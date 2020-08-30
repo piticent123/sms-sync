@@ -13,7 +13,7 @@ interface ContactDao {
     val all: LiveData<List<Contact>>
 
     @Query("SELECT * FROM contact WHERE phoneNumbers LIKE :number")
-    fun getByNumber(number: String): LiveData<Contact>
+    fun getByNumber(number: String): LiveData<Contact?>
 
     @Insert
     suspend fun insert(contact: Contact)

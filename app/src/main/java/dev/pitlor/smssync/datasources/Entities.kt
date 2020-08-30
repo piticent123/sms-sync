@@ -12,17 +12,18 @@ import java.time.OffsetDateTime
 
 @Entity
 data class Contact (
-    @PrimaryKey(autoGenerate = true) var id: Int = 0,
-    var name: String? = null,
-    var phoneNumbers: List<String>? = null,
-    var photo: Bitmap? = null
+    var name: String?,
+    var phoneNumbers: List<String>,
+    var photo: Bitmap?
 ) {
+    @PrimaryKey(autoGenerate = true) val id: Int = 0
+
     companion object {
         fun from(contact: dev.pitlor.sms.Contact): Contact {
             return Contact(
                 name = contact.name,
-                phoneNumbers = contact.phoneNumber
-                // photo = contact.getPicture()
+                phoneNumbers = contact.phoneNumber,
+                photo = contact.picture
             )
         }
     }
@@ -30,20 +31,21 @@ data class Contact (
 
 @Entity
 data class Message (
-    @PrimaryKey(autoGenerate = true) var id: Int = 0,
-    var threadId: Long = 0,
-    var sender: String = "",
-    var date: OffsetDateTime? = null,
-    var photo: Bitmap? = null,
-    var body: String? = null,
-    var subject: String? = null
+    val threadId: Long,
+    val sender: String,
+    val date: OffsetDateTime?,
+    val photo: Bitmap?,
+    val body: String?,
+    val subject: String?
 ) {
+    @PrimaryKey(autoGenerate = true) val id: Int = 0
+
     companion object {
         fun from(message: dev.pitlor.sms.Message): Message {
             return Message(
                 sender = message.sender,
                 body = message.body,
-                // photo = message.image,
+                photo = message.image,
                 date = message.date,
                 subject = message.subject,
                 threadId = message.threadId,
@@ -52,4 +54,8 @@ data class Message (
     }
 }
 
-@Entity data class Sync(@PrimaryKey(autoGenerate = true) val id: Int = 0, var date: OffsetDateTime = OffsetDateTime.MIN)
+@Entity data class Sync(
+    val date: OffsetDateTime
+) {
+    @PrimaryKey(autoGenerate = true) val id: Int = 0
+}

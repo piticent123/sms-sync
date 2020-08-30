@@ -1,14 +1,14 @@
 package dev.pitlor.sms.repositories
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.provider.Telephony
 import android.provider.Telephony.TextBasedSmsColumns.*
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dev.pitlor.sms.*
 import java.io.BufferedReader
-import java.io.File
-import java.io.FileOutputStream
 import java.io.InputStreamReader
 import java.nio.charset.StandardCharsets
 import java.time.Instant
@@ -80,7 +80,7 @@ class MessageRepository @Inject constructor(@ApplicationContext private val cont
                     "image/bmp",
                     "image/gif",
                     "image/jpg",
-                    "image/png" -> picture = getImage(getString(Telephony.Mms._ID), id)
+                    "image/png" -> picture = getImage(getString(Telephony.Mms._ID))
                 }
             }
 
@@ -112,20 +112,15 @@ class MessageRepository @Inject constructor(@ApplicationContext private val cont
         return stringBuilder.toString()
     }
 
-    private fun getImage(partId: String, messageId: String): File? {
-        val file = File(context.cacheDir, "${messageId}_${partId}.png")
-        if (file.exists()) {
-            return file
-        }
-
+    private fun getImage(partId: String): Bitmap? {
+        var bitmap: Bitmap? = null
         contentResolver.useInputStream(Uri.parse("content://mms/part/$partId")) {
             val buffer = ByteArray(available())
             read(buffer)
-            val outputStream = FileOutputStream(file)
-            outputStream.write(buffer)
+            bitmap = BitmapFactory.decodeByteArray(buffer, 0, available())
         }
 
-        return file
+        return bitmap
     }
 
     companion object {

@@ -5,6 +5,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dev.pitlor.sms.Contact
 import dev.pitlor.sms.Message
 import dev.pitlor.smssync.datasources.Sync
+import kotlinx.coroutines.flow.combineTransform
 import java.time.OffsetDateTime
 import javax.inject.Inject
 
@@ -15,7 +16,7 @@ class AppRepository @Inject constructor(@ApplicationContext context: Context) : 
     val timeOfLastSavedText = messageDao.timeOfLastSavedText
 
     suspend fun addSync() {
-        syncDao.addSync(Sync(date = OffsetDateTime.now()))
+        syncDao.addSync(Sync(OffsetDateTime.now()))
     }
 
     suspend fun addMessages(messages: List<Message>) {
@@ -24,23 +25,21 @@ class AppRepository @Inject constructor(@ApplicationContext context: Context) : 
     }
 
     suspend fun addAndUpdateContacts(contacts: List<Contact>) {
-        val contactsAsEntities = contacts.map { dev.pitlor.smssync.datasources.Contact.from(it) }
-        for (contact in contactsAsEntities) {
-            var savedContact: dev.pitlor.smssync.datasources.Contact? = null
-            for (phoneNumber in contact.phoneNumbers!!) {
-                savedContact = contactDao.getByNumber(phoneNumber).value
-                if (savedContact != null) {
-                    break
-                }
+        for (contact in contacts) {
+            val entity = contact.phoneNumber
+                .map { contactDao.getByNumber(it).value }
+                .find { it != null }
+
+            if (entity != null) {
+                entity.phoneNumbers = contact.phoneNumber
+                entity.name = contact.name
+                entity.photo = contact.picture
+                contactDao.update(entity)
+
+                return
             }
 
-            when (savedContact) {
-                null -> contactDao.insert(contact)
-                else -> {
-                    contact.id = savedContact.id
-                    contactDao.update(contact)
-                }
-            }
+            contactDao.insert(dev.pitlor.smssync.datasources.Contact.from(contact))
         }
     }
 }

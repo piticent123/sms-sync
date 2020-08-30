@@ -1,5 +1,6 @@
 package dev.pitlor.sms
 
+import android.graphics.Bitmap
 import java.io.File
 import java.time.OffsetDateTime
 
@@ -7,7 +8,7 @@ data class Mms (
     var address: String = "",
     var dateReceived: OffsetDateTime = OffsetDateTime.MIN,
     var threadId: Long = -1,
-    var picture: File? = null,
+    var picture: Bitmap? = null,
     var subject: String? = null,
     var body: String? = null
 )
@@ -21,9 +22,9 @@ data class Sms (
 )
 
 data class Contact (
-    val name: String,
-    val phoneNumber: List<String>,
-    val picture: File? = null
+    var name: String,
+    var phoneNumber: List<String>,
+    var picture: Bitmap? = null
 )
 
 data class Message (
@@ -32,7 +33,7 @@ data class Message (
     val threadId: Long,
     val body: String? = null,
     val subject: String? = null,
-    val image: File? = null,
+    val image: Bitmap? = null,
 ) {
     companion object {
         fun from(mms: Mms): Message {
