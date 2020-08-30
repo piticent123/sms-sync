@@ -7,43 +7,41 @@ import androidx.room.TypeConverter
 import java.io.ByteArrayOutputStream
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
-import java.time.temporal.TemporalAccessor
-import java.util.*
 
 class Converters {
     private val formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
 
     @TypeConverter
-    fun toOffsetDateTime(value: String): OffsetDateTime {
+    fun toOffsetDateTime(value: String?): OffsetDateTime? {
         return formatter.parse(value) { OffsetDateTime.from(it) }
     }
 
     @TypeConverter
-    fun fromOffsetDateTime(date: OffsetDateTime): String {
-        return date.format(formatter)
+    fun fromOffsetDateTime(date: OffsetDateTime?): String? {
+        return date?.format(formatter)
     }
 
     @TypeConverter
-    fun fromBitmap(bitmap: Bitmap): String {
+    fun fromBitmap(bitmap: Bitmap?): String? {
         val outputStream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+        bitmap?.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
         val byteArray = outputStream.toByteArray()
         return Base64.encodeToString(byteArray, Base64.DEFAULT)
     }
 
     @TypeConverter
-    fun toBitmap(encodedString: String?): Bitmap {
+    fun toBitmap(encodedString: String?): Bitmap? {
         val decodedBytes = Base64.decode(encodedString, Base64.DEFAULT)
         return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
     }
 
     @TypeConverter
-    fun fromList(list: List<String>): String {
-        return list.joinToString(separator = ",")
+    fun fromList(list: List<String>?): String? {
+        return list?.joinToString(separator = ",")
     }
 
     @TypeConverter
-    fun toList(string: String): List<String> {
-        return string.split(",")
+    fun toList(string: String?): List<String>? {
+        return string?.split(",")
     }
 }

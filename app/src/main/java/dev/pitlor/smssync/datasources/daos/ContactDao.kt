@@ -10,14 +10,14 @@ import dev.pitlor.smssync.datasources.Contact
 @Dao
 interface ContactDao {
     @get:Query("SELECT * FROM contact")
-    val all: LiveData<List<Contact?>?>?
+    val all: LiveData<List<Contact>>
 
     @Query("SELECT * FROM contact WHERE phoneNumbers LIKE :number")
-    fun getByNumber(number: String?): LiveData<Contact?>?
+    fun getByNumber(number: String): LiveData<Contact>
 
     @Insert
-    fun insert(contact: Contact?)
+    suspend fun insert(contact: Contact)
 
     @Update
-    fun update(contact: Contact?)
+    suspend fun update(contact: Contact)
 }

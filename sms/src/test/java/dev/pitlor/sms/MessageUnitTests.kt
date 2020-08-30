@@ -1,15 +1,11 @@
 package dev.pitlor.sms
 
-import dev.pitlor.sms.models.Mms
-import dev.pitlor.sms.models.Sms
 import dev.pitlor.sms.repositories.MessageRepository
 import org.junit.Assert
 import org.junit.Test
-import org.mockito.Mock
 import org.mockito.Mockito
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
-import kotlin.math.exp
 
 class MessageUnitTests {
     private fun date(year: Int): OffsetDateTime {
@@ -23,10 +19,9 @@ class MessageUnitTests {
 
         Mockito
             .`when`(mockMessageRepository.getAllIdsAfter(null))
-            .thenReturn(listOf(
-                IntRange(1, 10).map { it.toString() },
-                IntRange(11, 20).map { it.toString() },
-                IntRange(21, 40).map { it.toString() }
+            .thenReturn(MessagesDTO(
+                smsIds = IntRange(1, 10).map { it.toString() },
+                mmsIds = IntRange(11, 20).map { it.toString() },
             ))
         for (i in IntRange(1, 10)) {
             Mockito

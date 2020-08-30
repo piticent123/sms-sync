@@ -30,7 +30,7 @@ abstract class AppDatabase : RoomDatabase() {
 
             synchronized(this) {
                 val instance = Room
-                    .databaseBuilder(context, AppDatabase::class.java, "sms-sync.db")
+                    .databaseBuilder(context.applicationContext, AppDatabase::class.java, "sms-sync.db")
                     .addMigrations(*migrations)
                     .build()
                 INSTANCE = instance

@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.provider.Telephony
 import android.provider.Telephony.TextBasedSmsColumns.*
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dev.pitlor.sms.*
 import java.io.BufferedReader
 import java.io.File
@@ -16,7 +17,7 @@ import java.time.ZoneId
 import java.util.*
 import javax.inject.Inject
 
-class MessageRepository @Inject constructor(private val context: Context) {
+class MessageRepository @Inject constructor(@ApplicationContext private val context: Context) {
     private val contentResolver = context.contentResolver!!
 
     fun getAllIdsAfter(minimumTime: OffsetDateTime?): MessagesDTO {
@@ -34,7 +35,7 @@ class MessageRepository @Inject constructor(private val context: Context) {
     }
 
     fun getSmsById(id: String): Sms {
-        return Sms.Builder {
+        return Sms().apply {
             contentResolver.queryOnce(
                 Telephony.Sms.CONTENT_URI,
                 projection = arrayOf(THREAD_ID, ADDRESS, BODY, DATE, SUBJECT),
@@ -51,7 +52,7 @@ class MessageRepository @Inject constructor(private val context: Context) {
     }
 
     fun getMmsById(id: String): Mms {
-        return Mms.Builder {
+        return Mms().apply {
             // Metadata
             contentResolver.queryOnce(
                 Telephony.Mms.CONTENT_URI,

@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import dev.pitlor.sms.Message
 import dev.pitlor.smssync.R
@@ -27,8 +27,7 @@ class MessagesAdapter(private val fragment: Fragment, private val messages: List
     }
 
     override fun onBindViewHolder(holder: MessageViewHolder, position: Int) {
-        val message = messages[position]
-        holder.setMessage(message)
+        holder.setMessage(messages[position])
     }
 
     override fun getItemCount(): Int {
@@ -36,12 +35,14 @@ class MessagesAdapter(private val fragment: Fragment, private val messages: List
     }
 
     inner class MessageViewHolder(val binding: MessagesListItemBinding) : RecyclerView.ViewHolder(binding.root) {
+        private val viewModel by fragment.viewModels<ConversationsListItemViewModel>()
+
         fun setMessage(message: Message) {
-            binding.viewModel.message = message
+            viewModel.message = message
         }
 
         init {
-            binding.viewModel = ViewModelProvider(fragment).get(ConversationsListItemViewModel::class.java)
+            binding.viewModel = viewModel
         }
     }
 

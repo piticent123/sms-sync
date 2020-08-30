@@ -1,20 +1,18 @@
 package dev.pitlor.smssync.datasources
 
 import android.graphics.Bitmap
-import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import androidx.room.Relation
 import java.time.OffsetDateTime
 
-data class MessageDTO (
-    @Embedded val content: Message,
-    @Relation(parentColumn = "sender", entityColumn = "phoneNumbers") var sender: Contact
-)
+//data class MessageDTO (
+//    @Embedded val content: Message,
+//    @Relation(parentColumn = "sender", entityColumn = "phoneNumbers") var sender: Contact
+//)
 
 @Entity
 data class Contact (
-    @PrimaryKey var id: Int? = null,
+    @PrimaryKey(autoGenerate = true) var id: Int = 0,
     var name: String? = null,
     var phoneNumbers: List<String>? = null,
     var photo: Bitmap? = null
@@ -32,10 +30,10 @@ data class Contact (
 
 @Entity
 data class Message (
-    @PrimaryKey var id: Int? = null,
-    var threadId: Long,
-    var sender: String,
-    var date: OffsetDateTime?,
+    @PrimaryKey(autoGenerate = true) var id: Int = 0,
+    var threadId: Long = 0,
+    var sender: String = "",
+    var date: OffsetDateTime? = null,
     var photo: Bitmap? = null,
     var body: String? = null,
     var subject: String? = null
@@ -54,4 +52,4 @@ data class Message (
     }
 }
 
-@Entity data class Sync(@PrimaryKey val id: Int? = null, var date: OffsetDateTime)
+@Entity data class Sync(@PrimaryKey(autoGenerate = true) val id: Int = 0, var date: OffsetDateTime = OffsetDateTime.MIN)

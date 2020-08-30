@@ -25,11 +25,13 @@ open class BaseViewModel @ViewModelInject constructor(private val _application: 
     }
 
     companion object {
+        @JvmStatic
         @BindingAdapter("visibleIf")
         fun visibleIf(view: View, visible: Boolean) {
             view.visibility = if (visible) View.VISIBLE else View.GONE
         }
 
+        @JvmStatic
         @BindingAdapter("imageUrl")
         fun imageUrl(imageView: ImageView, image: File) {
             Picasso.get().load(image).into(imageView)

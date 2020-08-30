@@ -22,7 +22,7 @@ class SmsSync @WorkerInject constructor(
 ) : Worker(context, workerParams) {
     override fun doWork(): Result {
         setProgress("Recording time of the sync")
-        appRepository.addSync()
+//        appRepository.addSync()
 
         setProgress("Checking permissions...")
         val results = listOf(
@@ -40,13 +40,13 @@ class SmsSync @WorkerInject constructor(
 
         setProgress("Reading all newer texts from the phone")
         val messages = messageRepository.readAllAfter(timeOfLastSavedText)
-        appRepository.addMessages(messages)
+//        appRepository.addMessages(messages)
 
         setProgress("Reading contacts")
         val contacts = contactRepository.readAll()
 
         setProgress("Adding new contacts and updating changed contacts")
-        appRepository.addAndUpdateContacts(contacts)
+//        appRepository.addAndUpdateContacts(contacts)
 
         setProgress("Finding preferred cloud provider")
         val cloudProviderEntries = context.resources.getStringArray(R.array.cloud_backup_provider_entries)
