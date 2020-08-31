@@ -7,18 +7,18 @@ import dev.pitlor.sms.Message
 import javax.inject.Inject
 
 class AppRepository @Inject constructor(@ApplicationContext context: Context) : BaseRepository(context) {
-    val allMessages = messageDao.all
+//    val allMessages = messageDao.all
 //    val lastSync = syncDao.lastSync
-    val messageCount = messageDao.size
-    val timeOfLastSavedText = messageDao.timeOfLastSavedText
+//    val messageCount = messageDao.size
+//    val timeOfLastSavedText = messageDao.timeOfLastSavedText
 
     suspend fun addSync() {
 //        syncDao.addSync(Sync(OffsetDateTime.now()))
     }
 
     suspend fun addMessages(messages: List<Message>) {
-        val messagesAsEntities = messages.map { dev.pitlor.smssync.datasources.Message.from(it) }
-        messageDao.insertAll(messagesAsEntities)
+//        val messagesAsEntities = messages.map { dev.pitlor.smssync.datasources.Message.from(it) }
+//        messageDao.insertAll(messagesAsEntities)
     }
 
     suspend fun addAndUpdateContacts(contacts: List<Contact>) {

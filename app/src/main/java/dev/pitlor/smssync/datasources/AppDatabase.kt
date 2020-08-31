@@ -5,12 +5,9 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import androidx.room.migration.Migration
-import dev.pitlor.smssync.datasources.daos.ContactDao
 import dev.pitlor.smssync.datasources.daos.MessageDao
-import dev.pitlor.smssync.datasources.daos.SyncDao
 
-@Database(entities = [Message::class], version = 1)
+@Database(entities = [Message::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun messageDao(): MessageDao
@@ -20,7 +17,6 @@ abstract class AppDatabase : RoomDatabase() {
     companion object {
         @Volatile
         private var INSTANCE: AppDatabase? = null
-        private val migrations = arrayOf<Migration>()
 
         fun getInstance(context: Context): AppDatabase {
             val tempInstance = INSTANCE
@@ -30,8 +26,7 @@ abstract class AppDatabase : RoomDatabase() {
 
             synchronized(this) {
                 val instance = Room
-                    .databaseBuilder(context.applicationContext, AppDatabase::class.java, "sms-sync.db")
-                    .addMigrations(*migrations)
+                    .databaseBuilder(context.applicationContext, AppDatabase::class.java, "sms-sync")
                     .build()
                 INSTANCE = instance
                 return instance

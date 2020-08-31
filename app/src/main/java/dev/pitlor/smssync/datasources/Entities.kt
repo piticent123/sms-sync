@@ -1,9 +1,7 @@
 package dev.pitlor.smssync.datasources
 
-import android.graphics.Bitmap
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.time.OffsetDateTime
 
 //data class MessageDTO (
 //    @Embedded val content: Message,
@@ -47,24 +45,24 @@ import java.time.OffsetDateTime
 
 @Entity
 data class Message (
-    val threadId: Long,
-    val sender: String,
-    val date: OffsetDateTime,
-    val photo: Bitmap?,
-    val body: String?,
-    val subject: String?
+//    val threadId: Long,
+    var sender: String = "",
+//    val date: OffsetDateTime,
+//    val photo: Bitmap?,
+//    val body: String?,
+//    val subject: String?
 ) {
-    @PrimaryKey(autoGenerate = true) val id: Int = 0
+    @PrimaryKey(autoGenerate = true) var id: Int = 0
 
     companion object {
         fun from(message: dev.pitlor.sms.Message): Message {
             return Message(
                 sender = message.sender,
-                body = message.body,
-                photo = message.image,
-                date = message.date,
-                subject = message.subject,
-                threadId = message.threadId,
+//                body = message.body,
+//                photo = message.image,
+//                date = message.date,
+//                subject = message.subject,
+//                threadId = message.threadId,
             )
         }
     }
