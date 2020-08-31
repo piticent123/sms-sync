@@ -10,12 +10,12 @@ import dev.pitlor.smssync.datasources.daos.ContactDao
 import dev.pitlor.smssync.datasources.daos.MessageDao
 import dev.pitlor.smssync.datasources.daos.SyncDao
 
-@Database(entities = [Message::class, Sync::class, Contact::class], version = 1)
+@Database(entities = [Message::class], version = 1)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun messageDao(): MessageDao
-    abstract fun syncDao(): SyncDao
-    abstract fun contactDao(): ContactDao
+//    abstract fun syncDao(): SyncDao
+//    abstract fun contactDao(): ContactDao
 
     companion object {
         @Volatile

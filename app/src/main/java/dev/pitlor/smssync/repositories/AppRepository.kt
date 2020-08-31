@@ -4,19 +4,16 @@ import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dev.pitlor.sms.Contact
 import dev.pitlor.sms.Message
-import dev.pitlor.smssync.datasources.Sync
-import kotlinx.coroutines.flow.combineTransform
-import java.time.OffsetDateTime
 import javax.inject.Inject
 
 class AppRepository @Inject constructor(@ApplicationContext context: Context) : BaseRepository(context) {
     val allMessages = messageDao.all
-    val lastSync = syncDao.lastSync
+//    val lastSync = syncDao.lastSync
     val messageCount = messageDao.size
     val timeOfLastSavedText = messageDao.timeOfLastSavedText
 
     suspend fun addSync() {
-        syncDao.addSync(Sync(OffsetDateTime.now()))
+//        syncDao.addSync(Sync(OffsetDateTime.now()))
     }
 
     suspend fun addMessages(messages: List<Message>) {
@@ -25,21 +22,21 @@ class AppRepository @Inject constructor(@ApplicationContext context: Context) : 
     }
 
     suspend fun addAndUpdateContacts(contacts: List<Contact>) {
-        for (contact in contacts) {
-            val entity = contact.phoneNumber
-                .map { contactDao.getByNumber(it).value }
-                .find { it != null }
-
-            if (entity != null) {
-                entity.phoneNumbers = contact.phoneNumber
-                entity.name = contact.name
-                entity.photo = contact.picture
-                contactDao.update(entity)
-
-                return
-            }
-
-            contactDao.insert(dev.pitlor.smssync.datasources.Contact.from(contact))
-        }
+//        for (contact in contacts) {
+//            val entity = contact.phoneNumber
+//                .map { contactDao.getByNumber(it).value }
+//                .find { it != null }
+//
+//            if (entity != null) {
+//                entity.phoneNumbers = contact.phoneNumber
+//                entity.name = contact.name
+//                entity.photo = contact.picture
+//                contactDao.update(entity)
+//
+//                return
+//            }
+//
+//            contactDao.insert(dev.pitlor.smssync.datasources.Contact.from(contact))
+//        }
     }
 }

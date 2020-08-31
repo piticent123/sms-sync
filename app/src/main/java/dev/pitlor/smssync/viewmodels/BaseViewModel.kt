@@ -1,6 +1,7 @@
 package dev.pitlor.smssync.viewmodels
 
 import android.app.Application
+import android.graphics.Bitmap
 import android.view.View
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
@@ -9,10 +10,9 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
 import androidx.work.WorkRequest
-import com.squareup.picasso.Picasso
 import dev.pitlor.smssync.repositories.AppRepository
 import dev.pitlor.smssync.tasks.SmsSync
-import java.io.File
+
 
 open class BaseViewModel @ViewModelInject constructor(private val _application: Application) : AndroidViewModel(_application) {
     val appRepository = AppRepository(_application)
@@ -33,8 +33,9 @@ open class BaseViewModel @ViewModelInject constructor(private val _application: 
 
         @JvmStatic
         @BindingAdapter("imageUrl")
-        fun imageUrl(imageView: ImageView, image: File) {
-            Picasso.get().load(image).into(imageView)
+        fun imageUrl(imageView: ImageView, image: Bitmap) {
+//           Picasso.get().load(image).into(imageView)
+            imageView.setImageBitmap(image)
         }
     }
 }

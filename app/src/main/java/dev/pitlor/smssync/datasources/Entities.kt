@@ -10,30 +10,46 @@ import java.time.OffsetDateTime
 //    @Relation(parentColumn = "sender", entityColumn = "phoneNumbers") var sender: Contact
 //)
 
-@Entity
-data class Contact (
-    var name: String?,
-    var phoneNumbers: List<String>,
-    var photo: Bitmap?
-) {
-    @PrimaryKey(autoGenerate = true) val id: Int = 0
+//data class MessageDTO(
+//    val id: Int,
+//    val threadId: Long,
+//    val sender: String,
+//    val date: OffsetDateTime,
+//    val photo: Uri?,
+//    val body: String?,
+//    val subject: String?
+//) {
+//    companion object {
+//        fun from(context: Context, message: Message): MessageDTO {
+//
+//        }
+//    }
+//}
 
-    companion object {
-        fun from(contact: dev.pitlor.sms.Contact): Contact {
-            return Contact(
-                name = contact.name,
-                phoneNumbers = contact.phoneNumber,
-                photo = contact.picture
-            )
-        }
-    }
-}
+//@Entity
+//data class Contact (
+//    var name: String,
+//    var phoneNumbers: List<String>,
+//    var photo: Bitmap?
+//) {
+//    @PrimaryKey(autoGenerate = true) val id: Int = 0
+//
+//    companion object {
+//        fun from(contact: dev.pitlor.sms.Contact): Contact {
+//            return Contact(
+//                name = contact.name,
+//                phoneNumbers = contact.phoneNumber,
+//                photo = contact.picture
+//            )
+//        }
+//    }
+//}
 
 @Entity
 data class Message (
     val threadId: Long,
     val sender: String,
-    val date: OffsetDateTime?,
+    val date: OffsetDateTime,
     val photo: Bitmap?,
     val body: String?,
     val subject: String?
@@ -54,8 +70,8 @@ data class Message (
     }
 }
 
-@Entity data class Sync(
-    val date: OffsetDateTime
-) {
-    @PrimaryKey(autoGenerate = true) val id: Int = 0
-}
+//@Entity data class Sync(
+//    val date: OffsetDateTime
+//) {
+//    @PrimaryKey(autoGenerate = true) val id: Int = 0
+//}

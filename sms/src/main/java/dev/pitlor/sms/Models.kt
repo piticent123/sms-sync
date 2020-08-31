@@ -1,7 +1,6 @@
 package dev.pitlor.sms
 
 import android.graphics.Bitmap
-import java.io.File
 import java.time.OffsetDateTime
 
 data class Mms (
