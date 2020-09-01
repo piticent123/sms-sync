@@ -4,6 +4,6 @@ import android.app.Application
 import androidx.hilt.lifecycle.ViewModelInject
 
 class MessageFragmentViewModel @ViewModelInject constructor(application: Application) : BaseViewModel(application) {
-    val messagesCount = 0 // appRepository.messageCount
-    val isLoading = true // messagesCount.value == null
+    val messagesCount = appRepository.messageCount
+    val isLoading = messagesCount.value == null
 }

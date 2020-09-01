@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
+import dev.pitlor.smssync.adapters.MessagesAdapter
 import dev.pitlor.smssync.databinding.FragmentMessagesBinding
 import dev.pitlor.smssync.viewmodels.MessageFragmentViewModel
 import dev.pitlor.smssync.viewmodels.MessageRegularViewModel
@@ -20,6 +21,11 @@ class MessagesFragment : Fragment() {
         val binding = FragmentMessagesBinding.inflate(inflater)
         binding.viewModel = viewModel
         binding.regularState.viewModel = regularViewModel
+
+        val messagesAdapter = MessagesAdapter(this)
+        binding.regularState.messagesList.adapter = messagesAdapter
+        regularViewModel.messages.observe(viewLifecycleOwner, messagesAdapter::setMessages)
+
         return binding.root
     }
 }

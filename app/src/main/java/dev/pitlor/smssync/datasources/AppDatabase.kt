@@ -5,14 +5,16 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import dev.pitlor.smssync.datasources.daos.ContactDao
 import dev.pitlor.smssync.datasources.daos.MessageDao
+import dev.pitlor.smssync.datasources.daos.SyncDao
 
-@Database(entities = [Message::class], version = 1, exportSchema = false)
+@Database(entities = [Message::class, Contact::class, Sync::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun messageDao(): MessageDao
-//    abstract fun syncDao(): SyncDao
-//    abstract fun contactDao(): ContactDao
+    abstract fun syncDao(): SyncDao
+    abstract fun contactDao(): ContactDao
 
     companion object {
         @Volatile

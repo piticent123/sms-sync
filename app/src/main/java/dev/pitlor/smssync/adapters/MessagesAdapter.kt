@@ -7,18 +7,17 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
-import dev.pitlor.sms.Message
+import dev.pitlor.smssync.datasources.Message
 import dev.pitlor.smssync.R
 import dev.pitlor.smssync.adapters.MessagesAdapter.MessageViewHolder
 import dev.pitlor.smssync.databinding.MessagesListItemBinding
 import dev.pitlor.smssync.viewmodels.ConversationsListItemViewModel
 
-class MessagesAdapter(private val fragment: Fragment, private val messages: List<Message>)
-    : RecyclerView.Adapter<MessageViewHolder>()
-{
+class MessagesAdapter(private val fragment: Fragment) : RecyclerView.Adapter<MessageViewHolder>() {
     private val layoutInflater: LayoutInflater = fragment
         .requireContext()
         .getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+    private var messages = emptyList<Message>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
         val view: MessagesListItemBinding = DataBindingUtil
@@ -32,6 +31,11 @@ class MessagesAdapter(private val fragment: Fragment, private val messages: List
 
     override fun getItemCount(): Int {
         return messages.size
+    }
+
+    fun setMessages(messages: List<Message>) {
+        this.messages = messages
+        notifyDataSetChanged()
     }
 
     inner class MessageViewHolder(val binding: MessagesListItemBinding) : RecyclerView.ViewHolder(binding.root) {

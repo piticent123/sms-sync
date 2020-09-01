@@ -1,56 +1,62 @@
 package dev.pitlor.smssync.datasources
 
+import android.content.Context
+import android.graphics.Bitmap
+import android.net.Uri
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import androidx.room.Relation
+import java.time.OffsetDateTime
 
-//data class MessageDTO (
-//    @Embedded val content: Message,
-//    @Relation(parentColumn = "sender", entityColumn = "phoneNumbers") var sender: Contact
-//)
+data class MessageWithContact (
+    @Embedded var content: Message,
+    @Relation(parentColumn = "sender", entityColumn = "phoneNumbers") var sender: Contact
+)
 
-//data class MessageDTO(
-//    val id: Int,
-//    val threadId: Long,
-//    val sender: String,
-//    val date: OffsetDateTime,
-//    val photo: Uri?,
-//    val body: String?,
-//    val subject: String?
-//) {
-//    companion object {
-//        fun from(context: Context, message: Message): MessageDTO {
-//
-//        }
-//    }
-//}
+data class MessageDTO(
+    var id: Int,
+    var threadId: Long,
+    var sender: String,
+    var date: OffsetDateTime,
+    var photo: Uri?,
+    var body: String?,
+    var subject: String?
+) {
+    companion object {
+        fun from(context: Context, message: Message): MessageDTO {
+            TODO()
+        }
+    }
+}
 
-//@Entity
-//data class Contact (
-//    var name: String,
-//    var phoneNumbers: List<String>,
-//    var photo: Bitmap?
-//) {
-//    @PrimaryKey(autoGenerate = true) val id: Int = 0
-//
-//    companion object {
-//        fun from(contact: dev.pitlor.sms.Contact): Contact {
-//            return Contact(
-//                name = contact.name,
-//                phoneNumbers = contact.phoneNumber,
-//                photo = contact.picture
-//            )
-//        }
-//    }
-//}
+@Entity
+data class Contact (
+    var name: String,
+    var phoneNumbers: List<String>,
+    var photo: Bitmap?
+) {
+    @PrimaryKey(autoGenerate = true) var id: Int = 0
+
+    companion object {
+        fun from(contact: dev.pitlor.sms.Contact): Contact {
+            return Contact(
+                name = contact.name,
+                phoneNumbers = contact.phoneNumber,
+                photo = contact.picture
+            )
+        }
+    }
+}
 
 @Entity
 data class Message (
-//    val threadId: Long,
+    var threadId: Long,
     var sender: String = "",
-//    val date: OffsetDateTime,
-//    val photo: Bitmap?,
-//    val body: String?,
-//    val subject: String?
+    var date: OffsetDateTime,
+    var photo: Bitmap?,
+    var body: String?,
+    var subject: String?
 ) {
     @PrimaryKey(autoGenerate = true) var id: Int = 0
 
@@ -58,18 +64,18 @@ data class Message (
         fun from(message: dev.pitlor.sms.Message): Message {
             return Message(
                 sender = message.sender,
-//                body = message.body,
-//                photo = message.image,
-//                date = message.date,
-//                subject = message.subject,
-//                threadId = message.threadId,
+                body = message.body,
+                photo = message.image,
+                date = message.date,
+                subject = message.subject,
+                threadId = message.threadId,
             )
         }
     }
 }
 
-//@Entity data class Sync(
-//    val date: OffsetDateTime
-//) {
-//    @PrimaryKey(autoGenerate = true) val id: Int = 0
-//}
+@Entity data class Sync(
+    var date: OffsetDateTime
+) {
+    @PrimaryKey(autoGenerate = true) var id: Int = 0
+}

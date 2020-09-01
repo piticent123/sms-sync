@@ -10,7 +10,7 @@ import androidx.work.*
 import dev.pitlor.sms.Contacts
 import dev.pitlor.sms.Messages
 import dev.pitlor.smssync.R
-import dev.pitlor.smssync.repositories.AppRepository
+import dev.pitlor.smssync.datasources.AppRepository
 import dev.pitlor.smssync.setProgress
 
 class SmsSync @WorkerInject constructor(

@@ -10,7 +10,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
 import androidx.work.WorkRequest
-import dev.pitlor.smssync.repositories.AppRepository
+import dev.pitlor.smssync.datasources.AppRepository
 import dev.pitlor.smssync.tasks.SmsSync
 
 
