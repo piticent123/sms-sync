@@ -61,12 +61,12 @@
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:contentDescription="@string/mms_image_content_description"
-                    app:visibleIf="@{viewModel.message.image != null}"
+                    app:visibleIf="@{viewModel.message.photo != null}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintDimensionRatio="1:1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:imageUrl="@{viewModel.message.image}"
+                    app:imageUrl="@{viewModel.message.photo}"
                     tools:srcCompat="@tools:sample/avatars" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
