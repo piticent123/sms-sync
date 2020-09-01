@@ -1,10 +1,12 @@
 package dev.pitlor.smssync.activities
 
+import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
+import dagger.Provides
 import dagger.hilt.android.AndroidEntryPoint
 import dev.pitlor.smssync.R
 import dev.pitlor.smssync.databinding.ActivityMainBinding
@@ -25,5 +27,10 @@ class MainActivity : AppCompatActivity() {
             ?: return
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration)
         NavigationUI.setupWithNavController(view.navView, navController)
+    }
+
+    @Provides
+    fun getContext(): Context {
+        return this
     }
 }

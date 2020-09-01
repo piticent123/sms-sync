@@ -1,7 +1,5 @@
 package dev.pitlor.smssync.datasources
 
-import android.content.Context
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dev.pitlor.sms.Contact
 import dev.pitlor.sms.Message
 import dev.pitlor.smssync.datasources.daos.ContactDao
@@ -10,11 +8,11 @@ import dev.pitlor.smssync.datasources.daos.SyncDao
 import java.time.OffsetDateTime
 import javax.inject.Inject
 
-class AppRepository @Inject constructor(@ApplicationContext context: Context) {
-    private lateinit var messageDao: MessageDao
-    private lateinit var syncDao: SyncDao
+class AppRepository @Inject constructor(
+    private val messageDao: MessageDao,
+    private val syncDao: SyncDao,
     private val contactDao: ContactDao
-
+) {
     val allMessages = messageDao.all
     val lastSync = syncDao.lastSync
     val messageCount = messageDao.size
@@ -46,13 +44,6 @@ class AppRepository @Inject constructor(@ApplicationContext context: Context) {
 
             contactDao.insert(dev.pitlor.smssync.datasources.Contact.from(contact))
         }
-    }
-
-    init {
-        val database = AppDatabase.getInstance(context)
-        syncDao = database.syncDao()
-        contactDao = database.contactDao()
-        messageDao = database.messageDao()
     }
 }
 

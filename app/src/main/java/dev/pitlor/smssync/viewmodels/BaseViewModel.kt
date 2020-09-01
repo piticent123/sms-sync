@@ -15,8 +15,6 @@ import dev.pitlor.smssync.tasks.SmsSync
 
 
 open class BaseViewModel @ViewModelInject constructor(private val _application: Application) : AndroidViewModel(_application) {
-    val appRepository = AppRepository(_application)
-
     fun sync(@Suppress("UNUSED_PARAMETER") view: View) {
         val workRequest: WorkRequest = OneTimeWorkRequest.Builder(SmsSync::class.java)
             .setConstraints(SmsSync.getConstraints(_application))

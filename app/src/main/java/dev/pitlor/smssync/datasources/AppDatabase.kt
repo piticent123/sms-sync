@@ -5,6 +5,11 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ActivityContext
+import dev.pitlor.smssync.activities.MainActivity
 import dev.pitlor.smssync.datasources.daos.ContactDao
 import dev.pitlor.smssync.datasources.daos.MessageDao
 import dev.pitlor.smssync.datasources.daos.SyncDao
@@ -18,10 +23,10 @@ abstract class AppDatabase : RoomDatabase() {
 
     companion object {
         @Volatile
-        private var INSTANCE: AppDatabase? = null
+        private var databaseInstance: AppDatabase? = null
 
         fun getInstance(context: Context): AppDatabase {
-            val tempInstance = INSTANCE
+            val tempInstance = databaseInstance
             if (tempInstance != null) {
                 return tempInstance
             }
@@ -30,7 +35,7 @@ abstract class AppDatabase : RoomDatabase() {
                 val instance = Room
                     .databaseBuilder(context.applicationContext, AppDatabase::class.java, "sms-sync")
                     .build()
-                INSTANCE = instance
+                databaseInstance = instance
                 return instance
             }
         }
