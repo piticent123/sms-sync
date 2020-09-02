@@ -5,11 +5,6 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ActivityContext
-import dev.pitlor.smssync.activities.MainActivity
 import dev.pitlor.smssync.datasources.daos.ContactDao
 import dev.pitlor.smssync.datasources.daos.MessageDao
 import dev.pitlor.smssync.datasources.daos.SyncDao

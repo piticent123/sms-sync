@@ -28,9 +28,4 @@ class MainActivity : AppCompatActivity() {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration)
         NavigationUI.setupWithNavController(view.navView, navController)
     }
-
-    @Provides
-    fun getContext(): Context {
-        return this
-    }
 }

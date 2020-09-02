@@ -5,7 +5,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
-import dagger.hilt.android.qualifiers.ActivityContext
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dev.pitlor.smssync.datasources.daos.ContactDao
 import dev.pitlor.smssync.datasources.daos.MessageDao
 import dev.pitlor.smssync.datasources.daos.SyncDao
@@ -18,7 +18,7 @@ class Provider {
     @Volatile private var contactDaoInstance: ContactDao? = null
 
     @Provides
-    fun getMessageDao(@ActivityContext context: Context): MessageDao {
+    fun getMessageDao(@ApplicationContext context: Context): MessageDao {
         val tempInstance = messageDaoInstance
         if (tempInstance != null) {
             return tempInstance
@@ -32,7 +32,7 @@ class Provider {
     }
 
     @Provides
-    fun getSyncDao(@ActivityContext context: Context): SyncDao {
+    fun getSyncDao(@ApplicationContext context: Context): SyncDao {
         val tempInstance = syncDaoInstance
         if (tempInstance != null) {
             return tempInstance
@@ -46,7 +46,7 @@ class Provider {
     }
 
     @Provides
-    fun getContactDao(@ActivityContext context: Context): ContactDao {
+    fun getContactDao(@ApplicationContext context: Context): ContactDao {
         val tempInstance = contactDaoInstance
         if (tempInstance != null) {
             return tempInstance
