@@ -6,5 +6,5 @@ import dev.pitlor.smssync.datasources.AppRepository
 import dev.pitlor.smssync.datasources.Message
 
 class MessageRegularViewModel @ViewModelInject constructor(application: Application, appRepository: AppRepository) : BaseViewModel(application) {
-    val messages = appRepository.allMessages
+    var messages: List<Message> = emptyList()
 }
