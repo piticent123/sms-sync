@@ -7,11 +7,11 @@ import androidx.hilt.Assisted
 import androidx.hilt.work.WorkerInject
 import androidx.preference.PreferenceManager
 import androidx.work.*
+import androidx.work.CoroutineWorker
 import dev.pitlor.sms.Contacts
 import dev.pitlor.sms.Messages
 import dev.pitlor.smssync.R
 import dev.pitlor.smssync.datasources.AppRepository
-import dev.pitlor.smssync.setProgress
 
 class SmsSync @WorkerInject constructor(
     @param:Assisted private val context: Context,
@@ -19,56 +19,56 @@ class SmsSync @WorkerInject constructor(
     private val appRepository: AppRepository,
     private val messageRepository: Messages,
     private val contactRepository: Contacts
-) : Worker(context, workerParams) {
-    override fun doWork(): Result {
-        setProgress("Recording time of the sync")
+) : CoroutineWorker(context, workerParams) {
+    override suspend fun doWork(): Result {
+        setProgress(workDataOf(Progress to "Recording time of the sync"))
 //        appRepository.addSync()
 
-        setProgress("Checking permissions...")
+        setProgress(workDataOf(Progress to "Checking permissions..."))
         val results = listOf(
             context.checkSelfPermission(Manifest.permission.READ_SMS),
             context.checkSelfPermission(Manifest.permission.READ_CONTACTS)
         )
         if (results.stream().anyMatch { it == PackageManager.PERMISSION_DENIED }) {
-            setProgress("Checks failed. Please grant SMS/Contact read permissions and try again")
+            setProgress(workDataOf(Progress to "Checks failed. Please grant SMS/Contact read permissions and try again"))
             return Result.failure()
         }
-        setProgress("Checks passed!")
+        setProgress(workDataOf(Progress to "Checks passed!"))
 
-        setProgress("Finding last saved text")
+        setProgress(workDataOf(Progress to "Finding last saved text"))
 //        val timeOfLastSavedText = appRepository.timeOfLastSavedText.value
 
-        setProgress("Reading all newer texts from the phone")
+        setProgress(workDataOf(Progress to "Reading all newer texts from the phone"))
 //        val messages = messageRepository.readAllAfter(timeOfLastSavedText)
 //        appRepository.addMessages(messages)
 
-        setProgress("Reading contacts")
+        setProgress(workDataOf(Progress to "Reading contacts"))
 //        val contacts = contactRepository.readAll()
 
-        setProgress("Adding new contacts and updating changed contacts")
+        setProgress(workDataOf(Progress to "Adding new contacts and updating changed contacts"))
 //        appRepository.addAndUpdateContacts(contacts)
 
-        setProgress("Finding preferred cloud provider")
+        setProgress(workDataOf(Progress to "Finding preferred cloud provider"))
         val cloudProviderEntries = context.resources.getStringArray(R.array.cloud_backup_provider_entries)
         val cloudProviderValues = context.resources.getStringArray(R.array.cloud_backup_provider_values)
         val cloudProvider = PreferenceManager
             .getDefaultSharedPreferences(context)
             .getString("cloudProvider", "")
-        val humanReadableProvider = cloudProviderEntries[cloudProviderValues.indexOf(cloudProvider)]
         if (cloudProvider == null || cloudProvider == "") {
-            setProgress("No preferred cloud provider found. Please set one and try again")
+            setProgress(workDataOf(Progress to "No preferred cloud provider found. Please set one and try again"))
             return Result.failure()
         }
+        val humanReadableProvider = cloudProviderEntries[cloudProviderValues.indexOf(cloudProvider)]
 
-        setProgress("Uploading to $humanReadableProvider")
+        setProgress(workDataOf(Progress to "Uploading to $humanReadableProvider"))
         // ...upload to *somewhere*
 
-        setProgress("Done!")
+        setProgress(workDataOf(Progress to "Done!"))
         return Result.success()
     }
 
     companion object {
-        const val PROGRESS = "PROGRESS"
+        const val Progress = "PROGRESS"
         fun getConstraints(context: Context): Constraints {
             val useData = PreferenceManager
                 .getDefaultSharedPreferences(context)
