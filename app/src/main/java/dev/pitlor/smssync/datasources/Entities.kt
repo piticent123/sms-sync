@@ -8,6 +8,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.Relation
 import java.time.OffsetDateTime
+import java.util.*
 
 data class MessageWithContact (
     @Embedded var content: Message,
@@ -75,7 +76,8 @@ data class Message (
 }
 
 @Entity data class Sync(
-    var date: OffsetDateTime
+    var date: OffsetDateTime,
+    var workRequestId: UUID
 ) {
     @PrimaryKey(autoGenerate = true) var id: Int = 0
 }

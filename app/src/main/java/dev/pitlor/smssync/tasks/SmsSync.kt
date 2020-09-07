@@ -22,7 +22,7 @@ class SmsSync @WorkerInject constructor(
 ) : CoroutineWorker(context, workerParams) {
     override suspend fun doWork(): Result {
         setProgress(workDataOf(Progress to "Recording time of the sync"))
-//        appRepository.addSync()
+        appRepository.addSync(this.id)
 
         setProgress(workDataOf(Progress to "Checking permissions..."))
         val results = listOf(
@@ -53,7 +53,7 @@ class SmsSync @WorkerInject constructor(
         val cloudProviderValues = context.resources.getStringArray(R.array.cloud_backup_provider_values)
         val cloudProvider = PreferenceManager
             .getDefaultSharedPreferences(context)
-            .getString("cloudProvider", "")
+            .getString("cloudBackupProvider", "")
         if (cloudProvider == null || cloudProvider == "") {
             setProgress(workDataOf(Progress to "No preferred cloud provider found. Please set one and try again"))
             return Result.failure()

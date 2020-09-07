@@ -6,6 +6,7 @@ import dev.pitlor.smssync.datasources.daos.ContactDao
 import dev.pitlor.smssync.datasources.daos.MessageDao
 import dev.pitlor.smssync.datasources.daos.SyncDao
 import java.time.OffsetDateTime
+import java.util.*
 import javax.inject.Inject
 
 class AppRepository @Inject constructor(
@@ -18,8 +19,8 @@ class AppRepository @Inject constructor(
     val messageCount = messageDao.size
     val timeOfLastSavedText = messageDao.timeOfLastSavedText
 
-    suspend fun addSync() {
-        syncDao.addSync(Sync(OffsetDateTime.now()))
+    suspend fun addSync(requestId: UUID) {
+        syncDao.addSync(Sync(OffsetDateTime.now(), requestId))
     }
 
     suspend fun addMessages(messages: List<Message>) {

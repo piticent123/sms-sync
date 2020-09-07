@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import dev.pitlor.smssync.datasources.Message
 import dev.pitlor.smssync.R
 import dev.pitlor.smssync.adapters.MessagesAdapter.MessageViewHolder
-import dev.pitlor.smssync.databinding.MessagesListItemBinding
+import dev.pitlor.smssync.databinding.ListItemMessagesBinding
 import dev.pitlor.smssync.viewmodels.ConversationsListItemViewModel
 
 class MessagesAdapter(private val fragment: Fragment) : RecyclerView.Adapter<MessageViewHolder>() {
@@ -20,8 +20,8 @@ class MessagesAdapter(private val fragment: Fragment) : RecyclerView.Adapter<Mes
     private var messages = emptyList<Message>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
-        val view: MessagesListItemBinding = DataBindingUtil
-            .inflate(layoutInflater, R.layout.messages_list_item, parent, false)
+        val view: ListItemMessagesBinding = DataBindingUtil
+            .inflate(layoutInflater, R.layout.list_item_messages, parent, false)
         return MessageViewHolder(view)
     }
 
@@ -38,7 +38,7 @@ class MessagesAdapter(private val fragment: Fragment) : RecyclerView.Adapter<Mes
         notifyDataSetChanged()
     }
 
-    inner class MessageViewHolder(val binding: MessagesListItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class MessageViewHolder(val binding: ListItemMessagesBinding) : RecyclerView.ViewHolder(binding.root) {
         private val viewModel by fragment.viewModels<ConversationsListItemViewModel>()
 
         fun setMessage(message: Message) {

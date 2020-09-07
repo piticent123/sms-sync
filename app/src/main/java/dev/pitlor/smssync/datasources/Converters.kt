@@ -7,6 +7,7 @@ import androidx.room.TypeConverter
 import java.io.ByteArrayOutputStream
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
+import java.util.*
 
 class Converters {
     private val formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
@@ -43,5 +44,15 @@ class Converters {
     @TypeConverter
     fun toList(string: String?): List<String>? {
         return string?.split(",")
+    }
+
+    @TypeConverter
+    fun fromUuid(uuid: UUID?): String? {
+        return uuid?.toString()
+    }
+
+    @TypeConverter
+    fun toUuid(string: String?): UUID? {
+        return UUID.fromString(string)
     }
 }
