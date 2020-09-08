@@ -37,6 +37,11 @@ class SyncProgressAdapter(private val fragment: Fragment) : RecyclerView.Adapter
         notifyDataSetChanged()
     }
 
+    fun clear() {
+        progressItems.clear()
+        notifyDataSetChanged()
+    }
+
     inner class SyncProgressViewHolder(val binding: ListItemSyncProgressBinding) : RecyclerView.ViewHolder(binding.root) {
         private val viewModel by fragment.viewModels<SyncProgressListItemViewModel>()
 

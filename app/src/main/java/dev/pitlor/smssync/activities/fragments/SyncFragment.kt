@@ -41,6 +41,8 @@ class SyncFragment : Fragment() {
             if (it == null) return@observe
 
             viewModel.lastSync = it.date
+            viewModel.isLoading = false
+            syncProgressAdapter.clear()
             workManager
                 .getWorkInfoByIdLiveData(it.workRequestId)
                 .observe(viewLifecycleOwner, fun(workInfo) {

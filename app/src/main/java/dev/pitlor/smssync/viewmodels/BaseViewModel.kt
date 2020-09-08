@@ -12,13 +12,15 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
 import androidx.work.WorkRequest
+import dev.pitlor.smssync.SmsSyncApplication
 import dev.pitlor.smssync.tasks.SmsSync
 
 
-open class BaseViewModel constructor(private val _application: Application) : AndroidViewModel(_application) {
+open class BaseViewModel constructor(application: Application) : AndroidViewModel(application) {
     fun sync(@Suppress("UNUSED_PARAMETER") view: View) {
+        val application = getApplication<SmsSyncApplication>()
         val permissions = arrayOf(Manifest.permission.READ_SMS, Manifest.permission.READ_CONTACTS)
-        val permissionResults = permissions.map(_application::checkSelfPermission)
+        val permissionResults = permissions.map(application::checkSelfPermission)
         val permissionsNeeded = permissions
             .filterIndexed { i, _ -> permissionResults[i] == PackageManager.PERMISSION_DENIED }
             .toTypedArray()
@@ -29,9 +31,9 @@ open class BaseViewModel constructor(private val _application: Application) : An
         }
 
         val workRequest: WorkRequest = OneTimeWorkRequest.Builder(SmsSync::class.java)
-            .setConstraints(SmsSync.getConstraints(_application))
+            .setConstraints(SmsSync.getConstraints(application))
             .build()
-        WorkManager.getInstance(_application).enqueue(workRequest)
+        WorkManager.getInstance(application).enqueue(workRequest)
     }
 
     companion object {
