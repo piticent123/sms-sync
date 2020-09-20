@@ -9,5 +9,4 @@ import java.time.OffsetDateTime
 
 class SyncFragmentViewModel @ViewModelInject constructor(appRepository: AppRepository, application: Application) : BaseViewModel(application) {
     var lastSync: LiveData<Sync?> = appRepository.lastSync
-    var isLoading = true
 }

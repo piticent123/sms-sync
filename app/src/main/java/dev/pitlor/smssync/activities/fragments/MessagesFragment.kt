@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MessagesFragment : Fragment() {
-    private val viewModel by viewModels<MessageFragmentViewModel>()
+    private val fragmentViewModel by viewModels<MessageFragmentViewModel>()
     private val regularViewModel by viewModels<MessageRegularViewModel>()
 
     @Inject
@@ -25,12 +25,12 @@ class MessagesFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val messagesAdapter = MessagesAdapter(this)
-        val binding = FragmentMessagesBinding.inflate(inflater)
-        binding.viewModel = viewModel
-        binding.regularState.viewModel = regularViewModel
-        binding.regularState.messagesList.adapter = messagesAdapter
+        val binding = FragmentMessagesBinding.inflate(inflater).apply {
+            viewModel = fragmentViewModel
+            regularState.viewModel = regularViewModel
+            regularState.messagesList.adapter = messagesAdapter
+        }
 
-        appRepository.messageCount.observe(viewLifecycleOwner, { viewModel.messagesCount = it })
         appRepository.allMessages.observe(viewLifecycleOwner, messagesAdapter::setMessages)
 
         return binding.root

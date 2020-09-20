@@ -12,6 +12,7 @@ import dev.pitlor.sms.Contacts
 import dev.pitlor.sms.Messages
 import dev.pitlor.smssync.R
 import dev.pitlor.smssync.datasources.AppRepository
+import kotlinx.coroutines.coroutineScope
 
 class SmsSync @WorkerInject constructor(
     @param:Assisted private val context: Context,
@@ -20,9 +21,9 @@ class SmsSync @WorkerInject constructor(
     private val messageRepository: Messages,
     private val contactRepository: Contacts
 ) : CoroutineWorker(context, workerParams) {
-    override suspend fun doWork(): Result {
+    override suspend fun doWork(): Result = coroutineScope {
         setProgress(workDataOf(Progress to "Recording time of the sync"))
-        appRepository.addSync(this.id)
+        appRepository.addSync(id)
 
         setProgress(workDataOf(Progress to "Checking permissions..."))
         val results = listOf(
@@ -31,7 +32,7 @@ class SmsSync @WorkerInject constructor(
         )
         if (results.stream().anyMatch { it == PackageManager.PERMISSION_DENIED }) {
             setProgress(workDataOf(Progress to "Checks failed. Please grant SMS/Contact read permissions and try again"))
-            return Result.failure()
+            Result.failure()
         }
         setProgress(workDataOf(Progress to "Checks passed!"))
 
@@ -56,7 +57,7 @@ class SmsSync @WorkerInject constructor(
             .getString("cloudBackupProvider", "")
         if (cloudProvider == null || cloudProvider == "") {
             setProgress(workDataOf(Progress to "No preferred cloud provider found. Please set one and try again"))
-            return Result.failure()
+            Result.failure()
         }
         val humanReadableProvider = cloudProviderEntries[cloudProviderValues.indexOf(cloudProvider)]
 
@@ -64,7 +65,7 @@ class SmsSync @WorkerInject constructor(
         // ...upload to *somewhere*
 
         setProgress(workDataOf(Progress to "Done!"))
-        return Result.success()
+        Result.success()
     }
 
     companion object {
