@@ -9,7 +9,7 @@ import java.time.OffsetDateTime
 
 @Dao
 interface SyncDao {
-    @Query("SELECT * FROM sync ORDER BY date DESC LIMIT 1")
+    @Query("SELECT * FROM sync ORDER BY startTime DESC LIMIT 1")
     fun getLastSync(): LiveData<Sync>
 
     @Insert

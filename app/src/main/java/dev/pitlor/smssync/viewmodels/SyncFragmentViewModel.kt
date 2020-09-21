@@ -8,5 +8,5 @@ import dev.pitlor.smssync.datasources.Sync
 import java.time.OffsetDateTime
 
 class SyncFragmentViewModel @ViewModelInject constructor(appRepository: AppRepository, application: Application) : BaseViewModel(application) {
-    var lastSync = appRepository.getLastSync()
+    val lastSync = appRepository.getLastSync()
 }

@@ -26,6 +26,8 @@ class MessagesFragment : Fragment() {
         val messagesAdapter = MessagesAdapter(this)
         val binding = FragmentMessagesBinding.inflate(inflater).apply {
             lifecycleOwner = this@MessagesFragment
+            emptyState.lifecycleOwner = this@MessagesFragment
+            regularState.lifecycleOwner = this@MessagesFragment
 
             viewModel = fragmentViewModel
             regularState.viewModel = regularViewModel

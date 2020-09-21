@@ -20,7 +20,7 @@ class AppRepository @Inject constructor(
     fun getTimeOfLastSavedText() = messageDao.getTimeOfLastSavedText()
 
     suspend fun addSync(requestId: UUID): Long {
-        return syncDao.addSync(Sync(OffsetDateTime.now(), requestId))
+        return syncDao.addSync(Sync(requestId, OffsetDateTime.now()))
     }
 
     suspend fun addMessages(messages: List<Message>) {

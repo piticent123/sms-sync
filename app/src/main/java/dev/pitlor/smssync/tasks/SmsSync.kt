@@ -13,6 +13,7 @@ import dev.pitlor.sms.Messages
 import dev.pitlor.smssync.R
 import dev.pitlor.smssync.datasources.AppRepository
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 
 class SmsSync @WorkerInject constructor(
     @param:Assisted private val context: Context,
@@ -64,12 +65,15 @@ class SmsSync @WorkerInject constructor(
         setProgress(workDataOf(Progress to "Uploading to $humanReadableProvider"))
         // ...upload to *somewhere*
 
-        setProgress(workDataOf(Progress to "Done!"))
+        delay(1000)
+        setProgress(workDataOf(Progress to Finished))
         Result.success()
     }
 
     companion object {
         const val Progress = "PROGRESS"
+        const val Finished = "Done!"
+
         fun getConstraints(context: Context): Constraints {
             val useData = PreferenceManager
                 .getDefaultSharedPreferences(context)
