@@ -6,7 +6,7 @@
     <data>
         <variable
             name="viewModel"
-            type="dev.pitlor.smssync.viewmodels.SyncProgressListItemViewModel" />
+            type="dev.pitlor.smssync.viewmodels.ListItemSyncProgressViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

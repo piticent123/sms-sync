@@ -6,5 +6,5 @@ import androidx.lifecycle.LiveData
 import dev.pitlor.smssync.datasources.AppRepository
 
 class MessageFragmentViewModel @ViewModelInject constructor(appRepository: AppRepository, application: Application) : BaseViewModel(application) {
-    var messagesCount: LiveData<Int> = appRepository.messageCount
+    var messagesCount = appRepository.getMessageCount()
 }

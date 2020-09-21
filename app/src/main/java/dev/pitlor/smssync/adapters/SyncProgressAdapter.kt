@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import dev.pitlor.smssync.R
 import dev.pitlor.smssync.adapters.SyncProgressAdapter.SyncProgressViewHolder
 import dev.pitlor.smssync.databinding.ListItemSyncProgressBinding
-import dev.pitlor.smssync.viewmodels.SyncProgressListItemViewModel
+import dev.pitlor.smssync.viewmodels.ListItemSyncProgressViewModel
 
 class SyncProgressAdapter(private val fragment: Fragment) : RecyclerView.Adapter<SyncProgressViewHolder>() {
     private val layoutInflater: LayoutInflater = fragment
@@ -43,7 +43,7 @@ class SyncProgressAdapter(private val fragment: Fragment) : RecyclerView.Adapter
     }
 
     inner class SyncProgressViewHolder(val binding: ListItemSyncProgressBinding) : RecyclerView.ViewHolder(binding.root) {
-        private val viewModel by fragment.viewModels<SyncProgressListItemViewModel>()
+        private val viewModel by fragment.viewModels<ListItemSyncProgressViewModel>()
 
         fun setProgressItem(progressItem: String) {
             viewModel.progressItem = progressItem

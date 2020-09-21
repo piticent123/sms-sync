@@ -6,7 +6,7 @@
     <data>
         <variable
             name="viewModel"
-            type="dev.pitlor.smssync.viewmodels.ConversationsListItemViewModel" />
+            type="dev.pitlor.smssync.viewmodels.ListItemConversationsViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

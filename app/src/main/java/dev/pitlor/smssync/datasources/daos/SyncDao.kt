@@ -9,9 +9,9 @@ import java.time.OffsetDateTime
 
 @Dao
 interface SyncDao {
-    @get:Query("SELECT * FROM sync ORDER BY date DESC LIMIT 1")
-    val lastSync: LiveData<Sync?>
+    @Query("SELECT * FROM sync ORDER BY date DESC LIMIT 1")
+    fun getLastSync(): LiveData<Sync>
 
     @Insert
-    suspend fun addSync(date: Sync)
+    suspend fun addSync(date: Sync): Long
 }

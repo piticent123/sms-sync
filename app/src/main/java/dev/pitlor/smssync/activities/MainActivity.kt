@@ -1,6 +1,5 @@
 package dev.pitlor.smssync.activities
 
-import android.content.Context
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -10,7 +9,6 @@ import androidx.navigation.ui.NavigationUI
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
 import androidx.work.WorkRequest
-import dagger.Provides
 import dagger.hilt.android.AndroidEntryPoint
 import dev.pitlor.smssync.R
 import dev.pitlor.smssync.databinding.ActivityMainBinding

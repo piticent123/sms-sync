@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import dagger.hilt.android.AndroidEntryPoint
 import dev.pitlor.smssync.adapters.MessagesAdapter
 import dev.pitlor.smssync.databinding.FragmentMessagesBinding
@@ -26,12 +25,14 @@ class MessagesFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val messagesAdapter = MessagesAdapter(this)
         val binding = FragmentMessagesBinding.inflate(inflater).apply {
+            lifecycleOwner = this@MessagesFragment
+
             viewModel = fragmentViewModel
             regularState.viewModel = regularViewModel
             regularState.messagesList.adapter = messagesAdapter
         }
 
-        appRepository.allMessages.observe(viewLifecycleOwner, messagesAdapter::setMessages)
+        appRepository.getAllMessages().observe(viewLifecycleOwner, messagesAdapter::setMessages)
 
         return binding.root
     }

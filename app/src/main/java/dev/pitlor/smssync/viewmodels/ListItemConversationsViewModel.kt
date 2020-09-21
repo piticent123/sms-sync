@@ -4,6 +4,6 @@ import android.app.Application
 import androidx.hilt.lifecycle.ViewModelInject
 import dev.pitlor.smssync.datasources.Message
 
-class ConversationsListItemViewModel @ViewModelInject constructor(application: Application) : BaseViewModel(application) {
+class ListItemConversationsViewModel @ViewModelInject constructor(application: Application) : BaseViewModel(application) {
     var message: Message? = null
 }

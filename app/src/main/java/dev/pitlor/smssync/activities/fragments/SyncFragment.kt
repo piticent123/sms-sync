@@ -31,6 +31,8 @@ class SyncFragment : Fragment() {
         val syncProgressAdapter = SyncProgressAdapter(this)
 
         val view = FragmentSyncBinding.inflate(inflater).apply {
+            lifecycleOwner = this@SyncFragment
+
             viewModel = fragmentViewModel
             emptyState.viewModel = emptyStateViewModel
             regularState.viewModel = regularStateViewModel
@@ -38,7 +40,7 @@ class SyncFragment : Fragment() {
             regularState.recyclerViewSyncProgress.adapter = syncProgressAdapter
         }
 
-        appRepository.lastSync.observe(viewLifecycleOwner, {
+        appRepository.getLastSync().observe(viewLifecycleOwner, {
             if (it == null) return@observe
 
             syncProgressAdapter.clear()

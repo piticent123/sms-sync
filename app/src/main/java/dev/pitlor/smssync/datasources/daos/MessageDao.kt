@@ -10,17 +10,17 @@ import java.time.OffsetDateTime
 
 @Dao
 interface MessageDao {
-    @get:Query("SELECT * FROM message")
-    val all: LiveData<List<Message>>
+    @Query("SELECT * FROM message")
+    fun getAll(): LiveData<List<Message>>
 
     @Query("SELECT * FROM message WHERE id IN (:messageIds)")
     fun loadAllByIds(messageIds: List<Int>): LiveData<List<Message>>
 
-    @get:Query("SELECT SUM(id) FROM message GROUP BY id")
-    val size: LiveData<Int>
+    @Query("SELECT SUM(id) FROM message GROUP BY id")
+    fun getSize(): LiveData<Int>
 
-    @get:Query("SELECT date FROM message ORDER BY date DESC LIMIT 1")
-    val timeOfLastSavedText: LiveData<OffsetDateTime>
+    @Query("SELECT date FROM message ORDER BY date DESC LIMIT 1")
+    fun getTimeOfLastSavedText(): LiveData<OffsetDateTime>
 
     @Insert
     suspend fun insertAll(messages: List<Message>)

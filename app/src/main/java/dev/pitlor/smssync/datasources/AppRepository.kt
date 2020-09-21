@@ -14,13 +14,13 @@ class AppRepository @Inject constructor(
     private val syncDao: SyncDao,
     private val contactDao: ContactDao
 ) {
-    val allMessages = messageDao.all
-    val lastSync = syncDao.lastSync
-    val messageCount = messageDao.size
-    val timeOfLastSavedText = messageDao.timeOfLastSavedText
+    fun getAllMessages() = messageDao.getAll()
+    fun getLastSync() = syncDao.getLastSync()
+    fun getMessageCount() = messageDao.getSize()
+    fun getTimeOfLastSavedText() = messageDao.getTimeOfLastSavedText()
 
-    suspend fun addSync(requestId: UUID) {
-        syncDao.addSync(Sync(OffsetDateTime.now(), requestId))
+    suspend fun addSync(requestId: UUID): Long {
+        return syncDao.addSync(Sync(OffsetDateTime.now(), requestId))
     }
 
     suspend fun addMessages(messages: List<Message>) {
