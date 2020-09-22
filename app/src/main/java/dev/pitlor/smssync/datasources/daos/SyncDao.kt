@@ -8,10 +8,7 @@ import dev.pitlor.smssync.datasources.Sync
 import java.time.OffsetDateTime
 
 @Dao
-interface SyncDao {
+interface SyncDao: BaseDao<Sync> {
     @Query("SELECT * FROM sync ORDER BY startTime DESC LIMIT 1")
-    fun getLastSync(): LiveData<Sync>
-
-    @Insert
-    suspend fun addSync(date: Sync): Long
+    fun getLastSync(): LiveData<Sync?>
 }

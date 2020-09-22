@@ -12,9 +12,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center_horizontal"
-        android:paddingHorizontal="@dimen/activity_horizontal_margin"
-        android:paddingVertical="@dimen/activity_vertical_margin">
+        android:gravity="center_horizontal">
 
         <TextView
             android:id="@+id/label_last_updated"
@@ -22,6 +20,7 @@
             android:layout_height="wrap_content"
             android:text="@string/label_last_updated"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:paddingTop="@dimen/activity_vertical_margin"
             app:layout_constraintBottom_toTopOf="@+id/label_last_updated_time"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

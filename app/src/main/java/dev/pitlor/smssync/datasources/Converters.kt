@@ -14,6 +14,7 @@ class Converters {
 
     @TypeConverter
     fun toOffsetDateTime(value: String?): OffsetDateTime? {
+        if (value == null || value == "") return null
         return formatter.parse(value) { OffsetDateTime.from(it) }
     }
 

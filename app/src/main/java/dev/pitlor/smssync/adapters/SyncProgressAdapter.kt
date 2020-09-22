@@ -1,6 +1,7 @@
 package dev.pitlor.smssync.adapters
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -16,7 +17,7 @@ class SyncProgressAdapter(private val fragment: Fragment) : RecyclerView.Adapter
     private val layoutInflater: LayoutInflater = fragment
         .requireContext()
         .getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-    private val progressItems: MutableList<String> = mutableListOf()
+    private val progressItems = mutableListOf<String>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SyncProgressViewHolder {
         val view: ListItemSyncProgressBinding = DataBindingUtil

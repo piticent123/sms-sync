@@ -16,7 +16,7 @@ data class MessageWithContact(
 )
 
 data class MessageDTO(
-    var id: Int,
+    var id: Long,
     var threadId: Long,
     var sender: String,
     var date: OffsetDateTime,
@@ -38,7 +38,7 @@ data class Contact(
     var photo: Bitmap?
 ) {
     @PrimaryKey(autoGenerate = true)
-    var id: Int = 0
+    var id: Long = 0
 
     companion object {
         fun from(contact: dev.pitlor.sms.Contact): Contact {
@@ -61,7 +61,7 @@ data class Message(
     var subject: String?
 ) {
     @PrimaryKey(autoGenerate = true)
-    var id: Int = 0
+    var id: Long = 0
 
     companion object {
         fun from(message: dev.pitlor.sms.Message): Message {
@@ -84,5 +84,5 @@ data class Sync(
     var endTime: OffsetDateTime? = null
 ) {
     @PrimaryKey(autoGenerate = true)
-    var id: Int = 0
+    var id: Long = 0
 }

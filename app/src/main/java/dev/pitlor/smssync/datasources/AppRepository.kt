@@ -19,8 +19,15 @@ class AppRepository @Inject constructor(
     fun getMessageCount() = messageDao.getSize()
     fun getTimeOfLastSavedText() = messageDao.getTimeOfLastSavedText()
 
-    suspend fun addSync(requestId: UUID): Long {
-        return syncDao.addSync(Sync(requestId, OffsetDateTime.now()))
+    suspend fun addSync(requestId: UUID): Sync {
+        return Sync(requestId, OffsetDateTime.now()).apply {
+            id = syncDao.insert(this).first()
+        }
+    }
+
+    suspend fun finishSync(sync: Sync) {
+        sync.endTime = OffsetDateTime.now()
+        syncDao.update(sync)
     }
 
     suspend fun addMessages(messages: List<Message>) {
