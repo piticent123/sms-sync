@@ -3,7 +3,6 @@ package dev.pitlor.smssync.tasks
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
-import android.util.Log
 import androidx.hilt.Assisted
 import androidx.hilt.work.WorkerInject
 import androidx.preference.PreferenceManager
@@ -24,61 +23,64 @@ class SmsSync @WorkerInject constructor(
     private val contactRepository: Contacts
 ) : CoroutineWorker(context, workerParams) {
     override suspend fun doWork(): Result = coroutineScope {
-        setProgress(workDataOf(Progress to "Recording time of the sync"))
+        setProgress("Recording time of the sync")
         val sync = appRepository.addSync(id)
 
         delay(500)
-        setProgress(workDataOf(Progress to "Checking permissions..."))
+        setProgress("Checking permissions...")
         val results = listOf(
             context.checkSelfPermission(Manifest.permission.READ_SMS),
             context.checkSelfPermission(Manifest.permission.READ_CONTACTS)
         )
         if (results.stream().anyMatch { it == PackageManager.PERMISSION_DENIED }) {
             delay(500)
-            setProgress(workDataOf(Progress to "Checks failed. Please grant SMS/Contact read permissions and try again"))
-            Result.failure()
+            setProgress("Checks failed. Please grant SMS/Contact read permissions and try again")
+            appRepository.finishSync(sync)
+            return@coroutineScope Result.failure()
         }
         delay(500)
-        setProgress(workDataOf(Progress to "Checks passed!"))
+        setProgress("Checks passed!")
 
         delay(500)
-        setProgress(workDataOf(Progress to "Finding last saved text"))
+        setProgress("Finding last saved text")
 //        val timeOfLastSavedText = appRepository.timeOfLastSavedText.value
 
         delay(500)
-        setProgress(workDataOf(Progress to "Reading all newer texts from the phone"))
+        setProgress("Reading all newer texts from the phone")
 //        val messages = messageRepository.readAllAfter(timeOfLastSavedText)
 //        appRepository.addMessages(messages)
 
         delay(500)
-        setProgress(workDataOf(Progress to "Reading contacts"))
+        setProgress("Reading contacts")
 //        val contacts = contactRepository.readAll()
 
         delay(500)
-        setProgress(workDataOf(Progress to "Adding new contacts and updating changed contacts"))
+        setProgress("Adding new contacts and updating changed contacts")
 //        appRepository.addAndUpdateContacts(contacts)
 
         delay(500)
-        setProgress(workDataOf(Progress to "Finding preferred cloud provider"))
+        setProgress("Finding preferred cloud provider")
         val cloudProviderEntries = context.resources.getStringArray(R.array.cloud_backup_provider_entries)
         val cloudProviderValues = context.resources.getStringArray(R.array.cloud_backup_provider_values)
         val cloudProvider = PreferenceManager
             .getDefaultSharedPreferences(context)
             .getString("cloudBackupProvider", "")
-        if (cloudProvider == null || cloudProvider == "") {
-            setProgress(workDataOf(Progress to "No preferred cloud provider found. Please set one and try again"))
-            Result.failure()
+        val entryIndex = cloudProviderValues.indexOf(cloudProvider)
+        if (entryIndex == -1) {
+            setProgress("No preferred cloud provider found. Please set one and try again")
+            appRepository.finishSync(sync)
+            return@coroutineScope Result.failure()
         }
-        val humanReadableProvider = cloudProviderEntries[cloudProviderValues.indexOf(cloudProvider)]
+        val humanReadableProvider = cloudProviderEntries[entryIndex]
 
         delay(500)
-        setProgress(workDataOf(Progress to "Uploading to $humanReadableProvider"))
+        setProgress("Uploading to $humanReadableProvider")
         // ...upload to *somewhere*
 
         delay(500)
-        setProgress(workDataOf(Progress to "Done!"))
+        setProgress("Done!")
         appRepository.finishSync(sync)
-        Result.success()
+        return@coroutineScope Result.success()
     }
 
     companion object {
@@ -93,6 +95,10 @@ class SmsSync @WorkerInject constructor(
                 .setRequiresStorageNotLow(true)
                 .setRequiredNetworkType(if (useData) NetworkType.CONNECTED else NetworkType.UNMETERED)
                 .build()
+        }
+
+        suspend fun CoroutineWorker.setProgress(progress: String) {
+            setProgress(workDataOf(Progress to progress))
         }
     }
 }

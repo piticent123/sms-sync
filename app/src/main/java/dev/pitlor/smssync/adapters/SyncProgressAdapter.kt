@@ -35,7 +35,7 @@ class SyncProgressAdapter(private val fragment: Fragment) : RecyclerView.Adapter
 
     fun addProgress(progressItem: String) {
         progressItems.add(progressItem)
-        notifyDataSetChanged()
+        notifyItemInserted(progressItems.size - 1)
     }
 
     fun clear() {
