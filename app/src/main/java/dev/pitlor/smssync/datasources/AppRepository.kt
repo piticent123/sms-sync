@@ -18,6 +18,7 @@ class AppRepository @Inject constructor(
     fun getLastSync() = syncDao.getLastSync()
     fun getMessageCount() = messageDao.getSize()
     fun getTimeOfLastSavedText() = messageDao.getTimeOfLastSavedText()
+    fun getAllConversations() = messageDao.getAllConversations()
 
     suspend fun addSync(requestId: UUID): Sync {
         return Sync(requestId, OffsetDateTime.now()).apply {
@@ -32,7 +33,7 @@ class AppRepository @Inject constructor(
 
     suspend fun addMessages(messages: List<Message>) {
         val messagesAsEntities = messages.map { dev.pitlor.smssync.datasources.Message.from(it) }
-        messageDao.insertAll(messagesAsEntities)
+        messageDao.insert(*messagesAsEntities.toTypedArray())
     }
 
     suspend fun addAndUpdateContacts(contacts: List<Contact>) {

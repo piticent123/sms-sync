@@ -28,6 +28,7 @@ open class BaseViewModel constructor(application: Application) : AndroidViewMode
         if (permissionsNeeded.isNotEmpty()) {
             val launcher = workLauncher ?: return
             launcher.launch(permissionsNeeded)
+            return
         }
 
         val workRequest: WorkRequest = OneTimeWorkRequest.Builder(SmsSync::class.java)

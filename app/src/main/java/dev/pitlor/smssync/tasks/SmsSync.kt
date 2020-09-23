@@ -64,7 +64,7 @@ class SmsSync @WorkerInject constructor(
         val cloudProviderValues = context.resources.getStringArray(R.array.cloud_backup_provider_values)
         val cloudProvider = PreferenceManager
             .getDefaultSharedPreferences(context)
-            .getString("cloudBackupProvider", "")
+            .getString("cloudBackupProvider", "google_drive")
         val entryIndex = cloudProviderValues.indexOf(cloudProvider)
         if (entryIndex == -1) {
             setProgress("No preferred cloud provider found. Please set one and try again")
