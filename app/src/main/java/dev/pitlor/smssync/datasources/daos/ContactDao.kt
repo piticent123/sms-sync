@@ -13,7 +13,7 @@ interface ContactDao {
     fun getAll(): LiveData<List<Contact>>
 
     @Query("SELECT * FROM contact WHERE phoneNumbers LIKE :number")
-    fun getByNumber(number: String): LiveData<Contact?>
+    fun getByNumber(number: String): Contact?
 
     @Insert
     suspend fun insert(contact: Contact)

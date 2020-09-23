@@ -1,5 +1,7 @@
 package dev.pitlor.smssync.datasources
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Transformations
 import dev.pitlor.sms.Contact
 import dev.pitlor.sms.Message
 import dev.pitlor.smssync.datasources.daos.ContactDao
@@ -18,7 +20,14 @@ class AppRepository @Inject constructor(
     fun getLastSync() = syncDao.getLastSync()
     fun getMessageCount() = messageDao.getSize()
     fun getTimeOfLastSavedText() = messageDao.getTimeOfLastSavedText()
-    fun getAllConversations() = messageDao.getAllConversations()
+
+    fun getAllThreads(): LiveData<List<MessageWithContact>> {
+        return Transformations.map(messageDao.getAllThreads()) { messages ->
+            messages.map { message ->
+                MessageWithContact(message, contactDao.getByNumber(message.sender))
+            }
+        }
+    }
 
     suspend fun addSync(requestId: UUID): Sync {
         return Sync(requestId, OffsetDateTime.now()).apply {
@@ -39,7 +48,7 @@ class AppRepository @Inject constructor(
     suspend fun addAndUpdateContacts(contacts: List<Contact>) {
         for (contact in contacts) {
             val entity = contact.phoneNumber
-                .map { contactDao.getByNumber(it).value }
+                .map { contactDao.getByNumber(it) }
                 .find { it != null }
 
             if (entity != null) {

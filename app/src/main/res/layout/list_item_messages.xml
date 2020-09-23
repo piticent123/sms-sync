@@ -34,7 +34,7 @@
                     android:id="@+id/message_sender"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{viewModel.message.sender}"
+                    android:text="@{viewModel.message.sender.name}"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="@android:color/black"
                     app:layout_constraintBottom_toTopOf="@+id/message_body"
@@ -48,7 +48,7 @@
                     android:layout_height="0dp"
                     android:ellipsize="end"
                     android:maxLines="2"
-                    android:text="@{viewModel.message.body}"
+                    android:text="@{viewModel.message.content.body}"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/message_image"
@@ -61,12 +61,12 @@
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:contentDescription="@string/mms_image_content_description"
-                    app:visibleIf="@{viewModel.message.photo != null}"
+                    app:visibleIf="@{viewModel.message.sender.photo != null}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintDimensionRatio="1:1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:imageUrl="@{viewModel.message.photo}"
+                    app:imageUrl="@{viewModel.message.sender.photo}"
                     tools:srcCompat="@tools:sample/avatars" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 

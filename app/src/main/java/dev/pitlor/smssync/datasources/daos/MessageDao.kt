@@ -21,6 +21,6 @@ interface MessageDao: BaseDao<Message> {
     fun getTimeOfLastSavedText(): LiveData<OffsetDateTime>
 
     @Transaction
-    @Query("SELECT sender, body, date FROM message WHERE id IN (SELECT id FROM message GROUP BY threadId, id ORDER BY date DESC LIMIT 1)")
-    fun getAllConversations(): LiveData<List<MessageWithContact>>
+    @Query("SELECT * FROM message WHERE id IN (SELECT id FROM message GROUP BY threadId, id ORDER BY date DESC LIMIT 1)")
+    fun getAllThreads(): LiveData<List<Message>>
 }

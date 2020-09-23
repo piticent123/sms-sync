@@ -14,7 +14,7 @@ import dev.pitlor.smssync.databinding.ListItemMessagesBinding
 import dev.pitlor.smssync.datasources.MessageWithContact
 import dev.pitlor.smssync.viewmodels.ListItemConversationsViewModel
 
-class ConversationDetailAdapter(private val fragment: Fragment) : RecyclerView.Adapter<MessageViewHolder>() {
+class ConversationDetailAdapter(private val fragment: Fragment) : RecyclerView.Adapter<ConversationDetailAdapter.MessageViewHolder>() {
     private val layoutInflater: LayoutInflater = fragment
         .requireContext()
         .getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -39,7 +39,7 @@ class ConversationDetailAdapter(private val fragment: Fragment) : RecyclerView.A
         notifyDataSetChanged()
     }
 
-    inner class MessageViewHolder(val binding: ListItemMessagesBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class MessageViewHolder(binding: ListItemMessagesBinding) : RecyclerView.ViewHolder(binding.root) {
         private val viewModel by fragment.viewModels<ListItemConversationsViewModel>()
 
         fun setMessage(message: MessageWithContact) {

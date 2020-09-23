@@ -36,7 +36,7 @@ class MessagesFragment : Fragment() {
         }
 
         appRepository
-            .getAllConversations()
+            .getAllThreads()
             .observe(viewLifecycleOwner, conversationListAdapter::setMessages)
 
         return binding.root

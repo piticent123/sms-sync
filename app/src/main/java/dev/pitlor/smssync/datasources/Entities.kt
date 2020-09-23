@@ -11,25 +11,9 @@ import java.time.OffsetDateTime
 import java.util.*
 
 data class MessageWithContact(
-    @Embedded var content: Message,
-    @Relation(parentColumn = "sender", entityColumn = "phoneNumbers") var sender: Contact
+    var content: Message,
+    var sender: Contact?
 )
-
-data class MessageDTO(
-    var id: Long,
-    var threadId: Long,
-    var sender: String,
-    var date: OffsetDateTime,
-    var photo: Uri?,
-    var body: String?,
-    var subject: String?
-) {
-    companion object {
-        fun from(context: Context, message: Message): MessageDTO {
-            TODO()
-        }
-    }
-}
 
 @Entity
 data class Contact(
