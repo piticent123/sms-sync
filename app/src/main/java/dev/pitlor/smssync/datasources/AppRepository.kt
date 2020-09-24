@@ -16,22 +16,15 @@ class AppRepository @Inject constructor(
     private val syncDao: SyncDao,
     private val contactDao: ContactDao
 ) {
-    fun getAllMessages() = messageDao.getAll()
     fun getLastSync() = syncDao.getLastSync()
     fun getMessageCount() = messageDao.getSize()
     fun getTimeOfLastSavedText() = messageDao.getTimeOfLastSavedText()
-
-    fun getAllThreads(): LiveData<List<MessageWithContact>> {
-        return Transformations.map(messageDao.getAllThreads()) { messages ->
-            messages.map { message ->
-                MessageWithContact(message, contactDao.getByNumber(message.sender))
-            }
-        }
-    }
+    fun getAllContacts() = contactDao.getAll()
+    fun getAllThreads() = messageDao.getAllThreads()
 
     suspend fun addSync(requestId: UUID): Sync {
         return Sync(requestId, OffsetDateTime.now()).apply {
-            id = syncDao.insert(this).first()
+            id = syncDao.insert(this)
         }
     }
 
@@ -47,17 +40,12 @@ class AppRepository @Inject constructor(
 
     suspend fun addAndUpdateContacts(contacts: List<Contact>) {
         for (contact in contacts) {
-            val entity = contact.phoneNumber
-                .map { contactDao.getByNumber(it) }
-                .find { it != null }
-
+            val entity = contactDao.getByNumber(contact.phoneNumber)
             if (entity != null) {
-                entity.phoneNumbers = contact.phoneNumber
                 entity.name = contact.name
                 entity.photo = contact.picture
                 contactDao.update(entity)
-
-                return
+                continue
             }
 
             contactDao.insert(dev.pitlor.smssync.datasources.Contact.from(contact))

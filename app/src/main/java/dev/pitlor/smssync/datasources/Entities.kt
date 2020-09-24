@@ -1,8 +1,6 @@
 package dev.pitlor.smssync.datasources
 
-import android.content.Context
 import android.graphics.Bitmap
-import android.net.Uri
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -11,14 +9,14 @@ import java.time.OffsetDateTime
 import java.util.*
 
 data class MessageWithContact(
-    var content: Message,
-    var sender: Contact?
+    @Embedded var content: Message,
+    @Relation(parentColumn = "sender", entityColumn = "phoneNumber") var sender: Contact?
 )
 
 @Entity
 data class Contact(
     var name: String,
-    var phoneNumbers: List<String>,
+    var phoneNumber: String,
     var photo: Bitmap?
 ) {
     @PrimaryKey(autoGenerate = true)
@@ -28,7 +26,7 @@ data class Contact(
         fun from(contact: dev.pitlor.sms.Contact): Contact {
             return Contact(
                 name = contact.name,
-                phoneNumbers = contact.phoneNumber,
+                phoneNumber = contact.phoneNumber,
                 photo = contact.picture
             )
         }

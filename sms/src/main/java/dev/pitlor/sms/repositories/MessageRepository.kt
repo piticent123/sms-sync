@@ -5,7 +5,6 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.provider.Telephony
-import android.provider.Telephony.TextBasedSmsColumns.*
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dev.pitlor.sms.*
 import java.io.BufferedReader
@@ -24,7 +23,12 @@ class MessageRepository @Inject constructor(@ApplicationContext private val cont
         val smsIds = ArrayList<String>()
         val mmsIds = ArrayList<String>()
 
-        contentResolver.queryLoop(CONVERSATIONS_URI, projection = arrayOf("_id", "ct_t")) {
+        contentResolver.queryLoop(
+            Uri.parse("content://mms-sms/conversations/"),
+            projection = arrayOf("_id", "ct_t"),
+            selection = if (minimumTime != null) "${Telephony.TextBasedSmsColumns.DATE} > ?" else null,
+            selectionArgs = if (minimumTime != null) arrayOf(minimumTime.toString()) else null
+        ) {
             when (getString("ct_t")) {
                 "application/vnd.wap.multipart.related" -> mmsIds.add(getString("_id"))
                 else -> smsIds.add(getString("_id"))
@@ -38,15 +42,21 @@ class MessageRepository @Inject constructor(@ApplicationContext private val cont
         return Sms().apply {
             contentResolver.queryOnce(
                 Telephony.Sms.CONTENT_URI,
-                projection = arrayOf(THREAD_ID, ADDRESS, BODY, DATE, SUBJECT),
+                projection = arrayOf(
+                    Telephony.TextBasedSmsColumns.THREAD_ID,
+                    Telephony.TextBasedSmsColumns.ADDRESS,
+                    Telephony.TextBasedSmsColumns.BODY,
+                    Telephony.TextBasedSmsColumns.DATE,
+                    Telephony.TextBasedSmsColumns.SUBJECT
+                ),
                 selection = "${Telephony.Sms._ID} = ?",
                 selectionArgs = arrayOf(id)
             ) {
-                address = getString(ADDRESS)
-                body = getString(BODY)
-                dateReceived = longToDate(getLong(DATE))
-                threadId = getLong(THREAD_ID)
-                subject = getString(SUBJECT)
+                address = getString(Telephony.TextBasedSmsColumns.ADDRESS)
+                body = getString(Telephony.TextBasedSmsColumns.BODY)
+                dateReceived = longToDate(getLong(Telephony.TextBasedSmsColumns.DATE))
+                threadId = getLong(Telephony.TextBasedSmsColumns.THREAD_ID)
+                subject = getString(Telephony.TextBasedSmsColumns.SUBJECT)
             }
         }
     }
@@ -123,7 +133,4 @@ class MessageRepository @Inject constructor(@ApplicationContext private val cont
         return bitmap
     }
 
-    companion object {
-        private val CONVERSATIONS_URI = Uri.parse("content://mms-sms/conversations/")
-    }
 }

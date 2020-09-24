@@ -14,7 +14,7 @@ fun longToDate(date: Long): OffsetDateTime {
 }
 
 fun Cursor.getString(column: String): String {
-    return this.getString(this.getColumnIndex(column))
+    return this.getString(this.getColumnIndex(column)) ?: ""
 }
 
 fun Cursor.getLong(column: String): Long {

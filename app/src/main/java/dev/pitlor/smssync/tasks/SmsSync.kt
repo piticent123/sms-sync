@@ -22,11 +22,14 @@ class SmsSync @WorkerInject constructor(
     private val messageRepository: Messages,
     private val contactRepository: Contacts
 ) : CoroutineWorker(context, workerParams) {
+    private suspend fun setProgress(progress: String) {
+        setProgress(workDataOf(Progress to progress))
+    }
+
     override suspend fun doWork(): Result = coroutineScope {
         setProgress("Recording time of the sync")
         val sync = appRepository.addSync(id)
 
-        delay(500)
         setProgress("Checking permissions...")
         val results = listOf(
             context.checkSelfPermission(Manifest.permission.READ_SMS),
@@ -38,27 +41,21 @@ class SmsSync @WorkerInject constructor(
             appRepository.finishSync(sync)
             return@coroutineScope Result.failure()
         }
-        delay(500)
         setProgress("Checks passed!")
 
-        delay(500)
         setProgress("Finding last saved text")
-        val timeOfLastSavedText = null // appRepository.timeOfLastSavedText.value
+        val timeOfLastSavedText = appRepository.getTimeOfLastSavedText()
 
-        delay(500)
         setProgress("Reading all newer texts from the phone")
-        val messages = messageRepository.readAllAfter(timeOfLastSavedText)
+        val messages = messageRepository.readAllAfter(timeOfLastSavedText, this@SmsSync::setProgress)
         appRepository.addMessages(messages)
 
-        delay(500)
         setProgress("Reading contacts")
-        val contacts = contactRepository.readAll()
+        val newContacts = contactRepository.readAll(messages.map { it.sender }, this@SmsSync::setProgress)
 
-        delay(500)
         setProgress("Adding new contacts and updating changed contacts")
-        appRepository.addAndUpdateContacts(contacts)
+        appRepository.addAndUpdateContacts(newContacts)
 
-        delay(500)
         setProgress("Finding preferred cloud provider")
         val cloudProviderEntries = context.resources.getStringArray(R.array.cloud_backup_provider_entries)
         val cloudProviderValues = context.resources.getStringArray(R.array.cloud_backup_provider_values)
@@ -73,7 +70,6 @@ class SmsSync @WorkerInject constructor(
         }
         val humanReadableProvider = cloudProviderEntries[entryIndex]
 
-        delay(500)
         setProgress("Uploading to $humanReadableProvider")
         // ...upload to *somewhere*
 
@@ -95,10 +91,6 @@ class SmsSync @WorkerInject constructor(
                 .setRequiresStorageNotLow(true)
                 .setRequiredNetworkType(if (useData) NetworkType.CONNECTED else NetworkType.UNMETERED)
                 .build()
-        }
-
-        suspend fun CoroutineWorker.setProgress(progress: String) {
-            setProgress(workDataOf(Progress to progress))
         }
     }
 }

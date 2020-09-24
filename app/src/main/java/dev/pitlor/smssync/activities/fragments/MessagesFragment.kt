@@ -6,12 +6,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import dev.pitlor.smssync.adapters.ConversationListAdapter
 import dev.pitlor.smssync.databinding.FragmentMessagesBinding
 import dev.pitlor.smssync.datasources.AppRepository
 import dev.pitlor.smssync.viewmodels.MessageFragmentViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -35,9 +39,11 @@ class MessagesFragment : Fragment() {
             }
         }
 
-        appRepository
-            .getAllThreads()
-            .observe(viewLifecycleOwner, conversationListAdapter::setMessages)
+        lifecycleScope.launch {
+            appRepository
+                .getAllThreads()
+                .observe(viewLifecycleOwner, conversationListAdapter::setMessages)
+        }
 
         return binding.root
     }

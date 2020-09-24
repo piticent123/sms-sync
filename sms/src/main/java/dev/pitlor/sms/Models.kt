@@ -20,11 +20,9 @@ data class Sms (
     var subject: String? = null
 )
 
-data class ContactLookupDTO(val id: Long, val key: String)
-
 data class Contact (
     var name: String = "",
-    var phoneNumber: List<String> = listOf(),
+    var phoneNumber: String = "",
     var picture: Bitmap? = null
 )
 

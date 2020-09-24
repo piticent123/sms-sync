@@ -48,8 +48,7 @@ open class BaseViewModel constructor(application: Application) : AndroidViewMode
 
         @JvmStatic
         @BindingAdapter("imageUrl")
-        fun imageUrl(imageView: ImageView, image: Bitmap) {
-//           Picasso.get().load(image).into(imageView)
+        fun imageUrl(imageView: ImageView, image: Bitmap?) {
             imageView.setImageBitmap(image)
         }
     }

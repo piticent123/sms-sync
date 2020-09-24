@@ -14,12 +14,12 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/messages_list"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/list_item_messages" />
+            tools:listitem="@layout/list_item_thread_list" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
