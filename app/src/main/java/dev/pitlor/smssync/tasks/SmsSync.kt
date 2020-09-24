@@ -43,20 +43,20 @@ class SmsSync @WorkerInject constructor(
 
         delay(500)
         setProgress("Finding last saved text")
-//        val timeOfLastSavedText = appRepository.timeOfLastSavedText.value
+        val timeOfLastSavedText = null // appRepository.timeOfLastSavedText.value
 
         delay(500)
         setProgress("Reading all newer texts from the phone")
-//        val messages = messageRepository.readAllAfter(timeOfLastSavedText)
-//        appRepository.addMessages(messages)
+        val messages = messageRepository.readAllAfter(timeOfLastSavedText)
+        appRepository.addMessages(messages)
 
         delay(500)
         setProgress("Reading contacts")
-//        val contacts = contactRepository.readAll()
+        val contacts = contactRepository.readAll()
 
         delay(500)
         setProgress("Adding new contacts and updating changed contacts")
-//        appRepository.addAndUpdateContacts(contacts)
+        appRepository.addAndUpdateContacts(contacts)
 
         delay(500)
         setProgress("Finding preferred cloud provider")
