@@ -22,10 +22,6 @@ class SmsSync @WorkerInject constructor(
     private val messageRepository: Messages,
     private val contactRepository: Contacts
 ) : CoroutineWorker(context, workerParams) {
-    private suspend fun setProgress(progress: String) {
-        setProgress(workDataOf(Progress to progress))
-    }
-
     override suspend fun doWork(): Result = coroutineScope {
         setProgress("Recording time of the sync")
         val sync = appRepository.addSync(id)
@@ -47,11 +43,11 @@ class SmsSync @WorkerInject constructor(
         val timeOfLastSavedText = appRepository.getTimeOfLastSavedText()
 
         setProgress("Reading all newer texts from the phone")
-        val messages = messageRepository.readAllAfter(timeOfLastSavedText, this@SmsSync::setProgress)
+        val messages = messageRepository.readAllAfter(timeOfLastSavedText)
         appRepository.addMessages(messages)
 
         setProgress("Reading contacts")
-        val newContacts = contactRepository.readAll(messages.map { it.sender }, this@SmsSync::setProgress)
+        val newContacts = contactRepository.readAll(messages.map { it.sender })
 
         setProgress("Adding new contacts and updating changed contacts")
         appRepository.addAndUpdateContacts(newContacts)
@@ -91,6 +87,10 @@ class SmsSync @WorkerInject constructor(
                 .setRequiresStorageNotLow(true)
                 .setRequiredNetworkType(if (useData) NetworkType.CONNECTED else NetworkType.UNMETERED)
                 .build()
+        }
+
+        suspend fun CoroutineWorker.setProgress(progress: String) {
+            setProgress(workDataOf(Progress to progress))
         }
     }
 }

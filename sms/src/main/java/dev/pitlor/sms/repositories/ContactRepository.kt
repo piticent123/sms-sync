@@ -41,7 +41,7 @@ class ContactRepository @Inject constructor(@ApplicationContext private val cont
                 if (photoUri == "") return@queryOnce
                 contentResolver.useInputStream(Uri.parse(photoUri)) {
                     val buffer = ByteArray(available())
-                    read(buffer)
+                    read(buffer, 0, available())
                     picture = BitmapFactory.decodeByteArray(buffer, 0, available())
                 }
             }

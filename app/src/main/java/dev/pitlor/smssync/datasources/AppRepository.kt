@@ -19,7 +19,6 @@ class AppRepository @Inject constructor(
     fun getLastSync() = syncDao.getLastSync()
     fun getMessageCount() = messageDao.getSize()
     fun getTimeOfLastSavedText() = messageDao.getTimeOfLastSavedText()
-    fun getAllContacts() = contactDao.getAll()
     fun getAllThreads() = messageDao.getAllThreads()
 
     suspend fun addSync(requestId: UUID): Sync {
