@@ -9,6 +9,7 @@ import androidx.preference.PreferenceManager
 import androidx.work.*
 import androidx.work.CoroutineWorker
 import dev.pitlor.sms.Contacts
+import dev.pitlor.sms.Message
 import dev.pitlor.sms.Messages
 import dev.pitlor.smssync.R
 import dev.pitlor.smssync.datasources.AppRepository
@@ -43,8 +44,20 @@ class SmsSync @WorkerInject constructor(
         val timeOfLastSavedText = appRepository.getTimeOfLastSavedText()
 
         setProgress("Reading all newer texts from the phone")
-        val messages = messageRepository.readAllAfter(timeOfLastSavedText)
-        appRepository.addMessages(messages)
+        val messages: MutableList<Message>
+        var numberOfMessagesProcessed = 0
+        if (timeOfLastSavedText == null) {
+            messages = ArrayList()
+            messageRepository.applyAll {
+                appRepository.addMessages(it)
+                messages.addAll(it)
+                setProgress("Processed messages $numberOfMessagesProcessed-${numberOfMessagesProcessed + it.size}")
+                numberOfMessagesProcessed += it.size
+            }
+        } else {
+            messages = messageRepository.readAllAfter(timeOfLastSavedText).toMutableList()
+            appRepository.addMessages(messages)
+        }
 
         setProgress("Reading contacts")
         val newContacts = contactRepository.readAll(messages.map { it.sender })

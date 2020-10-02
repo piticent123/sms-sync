@@ -38,6 +38,24 @@ fun ContentResolver.queryLoop(
     }
 }
 
+suspend fun ContentResolver.queryLoop(
+    uri: Uri,
+    projection: Array<String>? = null,
+    selection: String? = null,
+    selectionArgs: Array<String>? = null,
+    sortOrder: String? = null,
+    @Suppress("UNUSED_PARAMETER") isAsync: Boolean,
+    useData: suspend Cursor.() -> Unit
+) {
+    val cursor = query(uri, projection, selection, selectionArgs, sortOrder)
+    if (cursor != null && cursor.moveToFirst()) {
+        do {
+            cursor.useData()
+        } while (cursor.moveToNext())
+        cursor.close()
+    }
+}
+
 fun ContentResolver.queryOnce(
     uri: Uri,
     projection: Array<String>? = null,

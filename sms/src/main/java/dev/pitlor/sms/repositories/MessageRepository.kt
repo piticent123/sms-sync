@@ -19,19 +19,52 @@ import javax.inject.Inject
 class MessageRepository @Inject constructor(@ApplicationContext private val context: Context) {
     private val contentResolver = context.contentResolver!!
 
-    fun getAllIdsAfter(minimumTime: OffsetDateTime?): MessagesDTO {
+    suspend fun applyAllMessages(saveMessages: suspend (List<MessageDTO>) -> Unit) {
+        val messages = ArrayList<MessageDTO>()
+        contentResolver.queryLoop(
+            Telephony.MmsSms.CONTENT_CONVERSATIONS_URI,
+            projection = arrayOf(Telephony.TextBasedSmsColumns.THREAD_ID),
+            isAsync = true
+        ) {
+            val conversationId = getLong(Telephony.TextBasedSmsColumns.THREAD_ID)
+            contentResolver.queryLoop(
+                Uri.parse("content://mms-sms/conversations/$conversationId"),
+                projection = arrayOf("_id", "ct_t"),
+                isAsync = true
+            ) {
+                val messageDto = MessageDTO(getString("_id"), getString("ct_t") == MMS_TYPE)
+                messages.add(messageDto)
+
+                if (messages.size == 100) {
+                    saveMessages(messages)
+                    messages.clear()
+                }
+            }
+        }
+    }
+
+    fun getAllIdsAfter(minimumTime: OffsetDateTime): MessagesDTO {
+        val conversations = ArrayList<Long>()
+        contentResolver.queryLoop(
+            Telephony.MmsSms.CONTENT_CONVERSATIONS_URI,
+            projection = arrayOf(Telephony.TextBasedSmsColumns.THREAD_ID),
+        ) {
+            conversations.add(getLong(Telephony.TextBasedSmsColumns.THREAD_ID))
+        }
+
         val smsIds = ArrayList<String>()
         val mmsIds = ArrayList<String>()
-
-        contentResolver.queryLoop(
-            Uri.parse("content://mms-sms/conversations/"),
-            projection = arrayOf("_id", "ct_t"),
-            selection = if (minimumTime != null) "${Telephony.TextBasedSmsColumns.DATE} > ?" else null,
-            selectionArgs = if (minimumTime != null) arrayOf(minimumTime.toString()) else null
-        ) {
-            when (getString("ct_t")) {
-                "application/vnd.wap.multipart.related" -> mmsIds.add(getString("_id"))
-                else -> smsIds.add(getString("_id"))
+        conversations.forEach { conversationId ->
+            contentResolver.queryLoop(
+                Uri.parse("content://mms-sms/conversations/$conversationId"),
+                projection = arrayOf("_id", "ct_t"),
+                selection = "${Telephony.TextBasedSmsColumns.DATE} > ?",
+                selectionArgs = arrayOf(minimumTime.toString())
+            ) {
+                when (getString("ct_t")) {
+                    "application/vnd.wap.multipart.related" -> mmsIds.add(getString("_id"))
+                    else -> smsIds.add(getString("_id"))
+                }
             }
         }
 
@@ -133,4 +166,7 @@ class MessageRepository @Inject constructor(@ApplicationContext private val cont
         return bitmap
     }
 
+    companion object {
+        const val MMS_TYPE = "application/vnd.wap.multipart.related"
+    }
 }

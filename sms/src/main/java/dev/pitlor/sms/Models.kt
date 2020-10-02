@@ -58,4 +58,5 @@ data class Message (
     }
 }
 
-data class MessagesDTO (val smsIds: List<String>, val mmsIds: List<String>)
+data class MessagesDTO(val smsIds: List<String>, val mmsIds: List<String>)
+data class MessageDTO(val id: String, val isMms: Boolean)
