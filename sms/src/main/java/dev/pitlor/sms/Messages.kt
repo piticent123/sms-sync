@@ -32,7 +32,7 @@ class Messages @Inject constructor(private val messageRepository: MessageReposit
                     Message.from(message)
                 }
             }
-            coroutineContext.run { saveMessages(messages) }
+            saveMessages(messages)
         }
     }
 }

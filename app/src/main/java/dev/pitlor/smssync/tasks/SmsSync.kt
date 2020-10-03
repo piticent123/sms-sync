@@ -3,6 +3,7 @@ package dev.pitlor.smssync.tasks
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
+import android.util.Log
 import androidx.hilt.Assisted
 import androidx.hilt.work.WorkerInject
 import androidx.preference.PreferenceManager
@@ -42,13 +43,15 @@ class SmsSync @WorkerInject constructor(
 
         setProgress("Finding last saved text")
         val timeOfLastSavedText = appRepository.getTimeOfLastSavedText()
+        val forceFullSync = inputData.getBoolean(ForceFullSync, false)
 
         setProgress("Reading all newer texts from the phone")
         val messages: MutableList<Message>
         var numberOfMessagesProcessed = 0
-        if (timeOfLastSavedText == null) {
+        if (timeOfLastSavedText == null || forceFullSync) {
             messages = ArrayList()
             messageRepository.applyAll {
+                Log.d("task", "processing ${it.map { m -> m.body }.joinToString()}")
                 appRepository.addMessages(it)
                 messages.addAll(it)
                 setProgress("Processed messages $numberOfMessagesProcessed-${numberOfMessagesProcessed + it.size}")
@@ -90,6 +93,7 @@ class SmsSync @WorkerInject constructor(
 
     companion object {
         const val Progress = "PROGRESS"
+        const val ForceFullSync = "FORCE_FULL_SYNC"
 
         fun getConstraints(context: Context): Constraints {
             val useData = PreferenceManager

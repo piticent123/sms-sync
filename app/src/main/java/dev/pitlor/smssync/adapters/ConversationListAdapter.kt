@@ -35,6 +35,7 @@ class ConversationListAdapter(private val fragment: Fragment) : RecyclerView.Ada
 
     fun setMessages(messages: List<MessageWithContact>) {
         this.messages = messages
+        Log.d("adapter", messages.toString())
         notifyDataSetChanged()
     }
 

@@ -14,7 +14,10 @@ interface MessageDao: BaseDao<Message> {
     @Query("SELECT date FROM message ORDER BY date DESC LIMIT 1")
     fun getTimeOfLastSavedText(): OffsetDateTime?
 
+    @Query("SELECT threadId FROM message GROUP BY threadId")
+    fun getAllThreads(): LiveData<List<Long>>
+
     @Transaction
-    @Query("SELECT * FROM message WHERE id IN (SELECT max(id) FROM message GROUP BY threadId)")
-    fun getAllThreads(): LiveData<List<MessageWithContact>>
+    @Query("SELECT * FROM message WHERE threadId = :threadId ORDER BY date DESC LIMIT 1")
+    fun peakThread(threadId: Long): LiveData<MessageWithContact>
 }

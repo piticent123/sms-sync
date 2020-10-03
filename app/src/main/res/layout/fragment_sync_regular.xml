@@ -18,9 +18,9 @@
             android:id="@+id/label_last_updated"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingTop="@dimen/activity_vertical_margin"
             android:text="@string/label_last_updated"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:paddingTop="@dimen/activity_vertical_margin"
             app:layout_constraintBottom_toTopOf="@+id/label_last_updated_time"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -32,10 +32,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+            app:displayDateTime="@{viewModel.lastSync.startTime}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/label_last_updated"
-            app:displayDateTime="@{viewModel.lastSync.startTime}"
             tools:text="1/1/1970 12:00 AM" />
 
         <Button
@@ -44,11 +44,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
+            android:onClick="@{viewModel::sync}"
             android:text="@string/label_sync_now"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/force_full_sync_button"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/label_last_updated_time"
-            android:onClick="@{viewModel::sync}"/>
+            app:layout_constraintTop_toBottomOf="@+id/label_last_updated_time" />
 
         <ProgressBar
             android:id="@+id/progress_bar"
@@ -56,12 +57,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            app:visibleIfNull="@{viewModel.lastSync.endTime}"
             app:layout_constraintEnd_toStartOf="@+id/label_sync_step"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/action_sync_now" />
+            app:layout_constraintTop_toBottomOf="@+id/action_sync_now"
+            app:visibleIfNull="@{viewModel.lastSync.endTime}" />
 
         <TextView
             android:id="@+id/label_sync_step"
@@ -69,12 +70,12 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginTop="32dp"
-            app:visibleIfNull="@{viewModel.lastSync.endTime}"
             android:text="@string/label_syncing_messages"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/progress_bar"
-            app:layout_constraintTop_toBottomOf="@+id/action_sync_now" />
+            app:layout_constraintTop_toBottomOf="@+id/action_sync_now"
+            app:visibleIfNull="@{viewModel.lastSync.endTime}" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_sync_progress"
@@ -85,6 +86,18 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/progress_bar" />
+
+        <Button
+            android:id="@+id/force_full_sync_button"
+            android:onClick="@{viewModel::fullSync}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/force_full_sync_label"
+            app:layout_constraintBottom_toBottomOf="@+id/action_sync_now"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/action_sync_now"
+            app:layout_constraintTop_toTopOf="@+id/action_sync_now" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

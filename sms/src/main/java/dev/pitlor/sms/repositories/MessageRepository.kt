@@ -41,6 +41,7 @@ class MessageRepository @Inject constructor(@ApplicationContext private val cont
                 }
             }
         }
+        if (messages.isNotEmpty()) saveMessages(messages)
     }
 
     fun getAllIdsAfter(minimumTime: OffsetDateTime): MessagesDTO {

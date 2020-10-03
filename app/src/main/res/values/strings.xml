@@ -11,6 +11,7 @@
     <string name="label_please_sync_messages">Please sync messages to view them</string>
     <string name="label_syncing_messages">Syncing Messages…</string>
     <string name="mms_image_content_description">MMS Image</string>
+    <string name="force_full_sync_label">Force Full Sync</string>
     <string-array name="cloud_backup_provider_values">
         <item>google_drive</item>
         <item>onedrive</item>
