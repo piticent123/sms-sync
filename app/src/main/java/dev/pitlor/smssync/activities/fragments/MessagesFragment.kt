@@ -57,19 +57,9 @@ class MessagesFragment : Fragment() {
         }
 
         lifecycleScope.launch {
-            val l =
-                Transformations
-                .map(appRepository.getAllThreads())
-                { it.map(appRepository::peakThread) }
-
-
-            appRepository.getAllThreads().observe(viewLifecycleOwner) { threadIds ->
-                Log.d("fragment", threadIds.toString())
-                val messages: List<MessageWithContact> = threadIds
-                    .map(appRepository::peakThread)
-                    .mapNotNull { it.value }
-                conversationListAdapter.setMessages(messages)
-            }
+            appRepository
+                .getAllThreads()
+                .observe(viewLifecycleOwner, conversationListAdapter::setMessages)
         }
 
         return binding.root

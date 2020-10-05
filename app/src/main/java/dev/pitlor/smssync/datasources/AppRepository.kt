@@ -20,7 +20,6 @@ class AppRepository @Inject constructor(
     fun getMessageCount() = messageDao.getSize()
     fun getTimeOfLastSavedText() = messageDao.getTimeOfLastSavedText()
     fun getAllThreads() = messageDao.getAllThreads()
-    fun peakThread(threadId: Long) = messageDao.peakThread(threadId)
 
     suspend fun addSync(requestId: UUID): Sync {
         return Sync(requestId, OffsetDateTime.now()).apply {
