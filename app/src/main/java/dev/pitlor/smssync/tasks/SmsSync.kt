@@ -4,7 +4,6 @@ import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
-import android.content.Context.NOTIFICATION_SERVICE
 import android.content.pm.PackageManager
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat.getSystemService
@@ -122,10 +121,8 @@ class SmsSync @WorkerInject constructor(
             ).apply {
                 description = applicationContext.getString(R.string.notification_channel_description)
             }
-            // https://developer.android.com/training/notify-user/channels
-            (getSystemService(applicationContext, NOTIFICATION_SERVICE) as NotificationManager).also {
-                it.createNotificationChannel(channel)
-            }
+            getSystemService(applicationContext, NotificationManager::class.java)
+                ?.createNotificationChannel(channel)
 
             val notification = NotificationCompat
                 .Builder(applicationContext, applicationContext.getString(R.string.notification_channel_id))
@@ -137,7 +134,7 @@ class SmsSync @WorkerInject constructor(
                 .addAction(android.R.drawable.ic_delete, applicationContext.getString(R.string.cancel_sync), intent)
                 .build()
 
-            setForeground(ForegroundInfo(notification))
+            setForeground(ForegroundInfo(R.string.notification_channel_id, notification))
             setProgress(workDataOf(Progress to progress))
         }
     }
