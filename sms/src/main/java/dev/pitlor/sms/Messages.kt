@@ -21,18 +21,12 @@ class Messages @Inject constructor(private val messageRepository: MessageReposit
         }
     }
 
-    suspend fun applyAll(saveMessages: suspend (List<Message>) -> Unit) {
-        messageRepository.applyAllMessages { messageDtos ->
-            val messages = messageDtos.map {
-                if (it.isMms) {
-                    val message = messageRepository.getMmsById(it.id)
-                    Message.from(message)
-                } else {
-                    val message = messageRepository.getSmsById(it.id)
-                    Message.from(message)
-                }
-            }
-            saveMessages(messages)
+    suspend fun applyAll(saveMessages: suspend (Message) -> Unit) {
+        messageRepository.applyAllMessages { messageDto ->
+            val message =
+                if (messageDto.isMms) messageRepository.getMmsById(messageDto.id)
+                else messageRepository.getSmsById(messageDto.id)
+            saveMessages(Message.from(message))
         }
     }
 }

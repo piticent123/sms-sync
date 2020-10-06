@@ -54,10 +54,10 @@ class SmsSync @WorkerInject constructor(
             if (timeOfLastSavedText == null || forceFullSync) {
                 messages = ArrayList()
                 messageRepository.applyAll {
-                    appRepository.addMessages(it)
-                    messages.addAll(it)
-                    setProgress("Processed messages $numberOfMessagesProcessed-${numberOfMessagesProcessed + it.size}")
-                    numberOfMessagesProcessed += it.size
+                    appRepository.addMessage(it)
+                    messages.add(it)
+                    setProgress("Processed message $numberOfMessagesProcessed")
+                    numberOfMessagesProcessed++
                 }
             } else {
                 messages = messageRepository.readAllAfter(timeOfLastSavedText).toMutableList()

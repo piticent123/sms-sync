@@ -19,8 +19,7 @@ import javax.inject.Inject
 class MessageRepository @Inject constructor(@ApplicationContext private val context: Context) {
     private val contentResolver = context.contentResolver!!
 
-    suspend fun applyAllMessages(saveMessages: suspend (List<MessageDTO>) -> Unit) {
-        val messages = ArrayList<MessageDTO>()
+    suspend fun applyAllMessages(saveMessage: suspend (MessageDTO) -> Unit) {
         contentResolver.queryLoop(
             Telephony.MmsSms.CONTENT_CONVERSATIONS_URI,
             projection = arrayOf(Telephony.TextBasedSmsColumns.THREAD_ID),
@@ -33,15 +32,9 @@ class MessageRepository @Inject constructor(@ApplicationContext private val cont
                 isAsync = true
             ) {
                 val messageDto = MessageDTO(getString("_id"), getString("ct_t") == MMS_TYPE)
-                messages.add(messageDto)
-
-                if (messages.size == 100) {
-                    saveMessages(messages)
-                    messages.clear()
-                }
+                saveMessage(messageDto)
             }
         }
-        if (messages.isNotEmpty()) saveMessages(messages)
     }
 
     fun getAllIdsAfter(minimumTime: OffsetDateTime): MessagesDTO {

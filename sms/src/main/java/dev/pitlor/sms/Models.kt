@@ -3,6 +3,8 @@ package dev.pitlor.sms
 import android.graphics.Bitmap
 import java.time.OffsetDateTime
 
+sealed class Text
+
 data class Mms (
     var address: String = "",
     var dateReceived: OffsetDateTime = OffsetDateTime.MIN,
@@ -10,7 +12,7 @@ data class Mms (
     var picture: Bitmap? = null,
     var subject: String? = null,
     var body: String? = null
-)
+): Text()
 
 data class Sms (
     var address: String = "",
@@ -18,7 +20,7 @@ data class Sms (
     var threadId: Long = -1,
     var body: String = "",
     var subject: String? = null
-)
+): Text()
 
 data class Contact (
     var name: String = "",
@@ -35,25 +37,24 @@ data class Message (
     val image: Bitmap? = null,
 ) {
     companion object {
-        fun from(mms: Mms): Message {
-            return Message(
-                sender=mms.address,
-                date=mms.dateReceived,
-                body=mms.body,
-                subject=mms.subject,
-                threadId=mms.threadId,
-                image=mms.picture
-            )
-        }
-
-        fun from(sms: Sms): Message {
-            return Message(
-                sender=sms.address,
-                body=sms.body,
-                date=sms.dateReceived,
-                threadId=sms.threadId,
-                subject=sms.subject
-            )
+        fun from(text: Text): Message {
+            return when(text) {
+                is Mms -> Message(
+                    sender=text.address,
+                    date=text.dateReceived,
+                    body=text.body,
+                    subject=text.subject,
+                    threadId=text.threadId,
+                    image=text.picture
+                )
+                is Sms -> Message(
+                    sender=text.address,
+                    body=text.body,
+                    date=text.dateReceived,
+                    threadId=text.threadId,
+                    subject=text.subject
+                )
+            }
         }
     }
 }

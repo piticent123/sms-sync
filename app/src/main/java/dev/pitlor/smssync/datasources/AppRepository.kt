@@ -32,6 +32,11 @@ class AppRepository @Inject constructor(
         syncDao.update(sync)
     }
 
+    suspend fun addMessage(message: Message) {
+        val entity = dev.pitlor.smssync.datasources.Message.from(message)
+        messageDao.insert(entity)
+    }
+
     suspend fun addMessages(messages: List<Message>) {
         val messagesAsEntities = messages.map { dev.pitlor.smssync.datasources.Message.from(it) }
         messageDao.insert(*messagesAsEntities.toTypedArray())
