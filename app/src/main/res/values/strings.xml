@@ -22,4 +22,9 @@
         <item>OneDrive</item>
         <item>OwnCloud</item>
     </string-array>
+    <string name="notification_channel_id">sync_progress</string>
+    <string name="notification_channel_name">Sync Progress</string>
+    <string name="notification_channel_description">Progress of currently running sync</string>
+    <string name="notification_title">Sync Progress</string>
+    <string name="cancel_sync">Cancel</string>
 </resources>

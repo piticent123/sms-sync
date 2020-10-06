@@ -49,6 +49,8 @@ open class BaseViewModel constructor(application: Application) : AndroidViewMode
         @JvmStatic
         @BindingAdapter("imageUrl")
         fun imageUrl(imageView: ImageView, image: Bitmap?) {
+            if (image == null) return
+
             imageView.setImageBitmap(image)
         }
     }

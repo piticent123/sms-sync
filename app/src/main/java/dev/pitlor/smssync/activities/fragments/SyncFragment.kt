@@ -50,7 +50,10 @@ class SyncFragment : Fragment() {
                 lifecycleOwner = this@SyncFragment
 
                 recyclerViewSyncProgress.apply {
-                    layoutManager = LinearLayoutManager(context)
+                    layoutManager = LinearLayoutManager(context).apply {
+                        stackFromEnd = true
+                    }
+
                     adapter = syncProgressAdapter
                 }
             }

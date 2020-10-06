@@ -48,6 +48,7 @@ class SyncProgressAdapter(private val fragment: Fragment) : RecyclerView.Adapter
 
         fun setProgressItem(progressItem: String) {
             viewModel.progressItem = progressItem
+            binding.executePendingBindings()
         }
 
         init {

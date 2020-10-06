@@ -36,11 +36,12 @@ class ConversationListAdapter(private val fragment: Fragment) : RecyclerView.Ada
         notifyDataSetChanged()
     }
 
-    inner class MessageViewHolder(binding: ListItemThreadListBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class MessageViewHolder(val binding: ListItemThreadListBinding) : RecyclerView.ViewHolder(binding.root) {
         private val viewModel by fragment.viewModels<ListItemThreadListViewModel>()
 
         fun setMessage(message: MessageWithContact) {
             viewModel.message = message
+            binding.executePendingBindings()
         }
 
         init {
