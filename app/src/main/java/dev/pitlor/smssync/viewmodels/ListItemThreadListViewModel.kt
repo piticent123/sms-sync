@@ -7,4 +7,7 @@ import dev.pitlor.smssync.datasources.MessageWithContact
 
 class ListItemThreadListViewModel @ViewModelInject constructor(application: Application) : BaseViewModel(application) {
     var message: MessageWithContact? = null
+    val s get() = message?.sender?.name ?: message?.content?.sender
+    val sender get() = "$s ($threadId)"
+    val threadId get() = message?.content?.threadId.toString()
 }

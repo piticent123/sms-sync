@@ -34,7 +34,7 @@
                     android:id="@+id/message_sender"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{viewModel.message.sender.name}"
+                    android:text="@{viewModel.sender}"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="@android:color/black"
                     app:layout_constraintBottom_toTopOf="@+id/message_body"

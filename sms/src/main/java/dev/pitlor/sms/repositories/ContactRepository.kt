@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.provider.ContactsContract
+import android.util.Log
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dev.pitlor.sms.*
 import javax.inject.Inject
@@ -14,6 +15,7 @@ class ContactRepository @Inject constructor(@ApplicationContext private val cont
     fun getContact(phoneNumberSearchQuery: String): Contact {
         return Contact().apply {
             phoneNumber = phoneNumberSearchQuery
+            Log.d("Contact Repository", "searching for $phoneNumberSearchQuery")
 
             var contactId = -1L
             contentResolver.queryOnce(
@@ -24,6 +26,7 @@ class ContactRepository @Inject constructor(@ApplicationContext private val cont
             ) {
                 contactId = getLong(ContactsContract.CommonDataKinds.Phone.CONTACT_ID)
             }
+            Log.d("Contact Repository", "ID is $contactId")
             if (contactId == -1L) return@apply
 
             contentResolver.queryOnce(
@@ -36,6 +39,8 @@ class ContactRepository @Inject constructor(@ApplicationContext private val cont
                 selectionArgs = arrayOf(contactId.toString())
             ) {
                 name = getString(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY)
+
+                Log.d("Contact Repository", "Found $name!")
 
                 val photoUri = getString(ContactsContract.Contacts.PHOTO_URI)
                 if (photoUri == "") return@queryOnce

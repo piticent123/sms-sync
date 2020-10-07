@@ -50,14 +50,12 @@ class SmsSync @WorkerInject constructor(
 
             setProgress("Reading all newer texts from the phone")
             val messages: MutableList<Message>
-            var numberOfMessagesProcessed = 0
             if (timeOfLastSavedText == null || forceFullSync) {
                 messages = ArrayList()
                 messageRepository.applyAll {
                     appRepository.addMessage(it)
                     messages.add(it)
-                    setProgress("Processed message $numberOfMessagesProcessed")
-                    numberOfMessagesProcessed++
+                    setProgress("Processed message ${messages.size}", "${it.sender} - ${it.body}")
                 }
             } else {
                 messages = messageRepository.readAllAfter(timeOfLastSavedText).toMutableList()
@@ -65,7 +63,7 @@ class SmsSync @WorkerInject constructor(
             }
 
             setProgress("Reading contacts")
-            val newContacts = contactRepository.readAll(messages.map { it.sender })
+            val newContacts = contactRepository.readAll(messages.map { it.sender }.distinct())
 
             setProgress("Adding new contacts and updating changed contacts")
             appRepository.addAndUpdateContacts(newContacts)
@@ -112,12 +110,11 @@ class SmsSync @WorkerInject constructor(
                 .build()
         }
 
-        suspend fun CoroutineWorker.setProgress(progress: String) {
-            val intent = WorkManager.getInstance(applicationContext).createCancelPendingIntent(id)
+        suspend fun CoroutineWorker.setProgress(progress: String, subtext: String? = null) {
             val channel = NotificationChannel(
                 applicationContext.getString(R.string.notification_channel_id),
                 applicationContext.getString(R.string.notification_channel_name),
-                NotificationManager.IMPORTANCE_DEFAULT
+                NotificationManager.IMPORTANCE_LOW
             ).apply {
                 description = applicationContext.getString(R.string.notification_channel_description)
             }
@@ -129,13 +126,17 @@ class SmsSync @WorkerInject constructor(
                 .setContentTitle(applicationContext.getString(R.string.notification_title))
                 .setTicker(applicationContext.getString(R.string.notification_title))
                 .setContentText(progress)
+                .setSubText(subtext)
                 .setSmallIcon(R.drawable.ic_sync_24dp)
                 .setOngoing(true)
-                .addAction(android.R.drawable.ic_delete, applicationContext.getString(R.string.cancel_sync), intent)
+                .addAction(
+                    android.R.drawable.ic_delete,
+                    applicationContext.getString(R.string.cancel_sync),
+                    WorkManager.getInstance(applicationContext).createCancelPendingIntent(id)
+                )
                 .build()
 
             setForeground(ForegroundInfo(R.string.notification_channel_id, notification))
-            setProgress(workDataOf(Progress to progress))
         }
     }
 }

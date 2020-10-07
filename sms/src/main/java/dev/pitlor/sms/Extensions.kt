@@ -48,10 +48,11 @@ suspend fun ContentResolver.queryLoop(
     useData: suspend Cursor.() -> Unit
 ) {
     val cursor = query(uri, projection, selection, selectionArgs, sortOrder)
+    var i = 0
     if (cursor != null && cursor.moveToFirst()) {
         do {
             cursor.useData()
-        } while (cursor.moveToNext())
+        } while (cursor.moveToNext() && i++ < 10)
         cursor.close()
     }
 }
